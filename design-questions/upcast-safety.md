@@ -13,24 +13,32 @@
 
 ### Unsafe to create a `*dyn Foo`
 
-> Announce that every fat pointer needs to have valid metadata part. Needs to switch the std::ptr::from_raw_parts{,_mut} APIs to be unsafe. And updates other documentations.
+> Announce that every fat pointer needs to have valid metadata part. ~~Needs to switch the std::ptr::from_raw_parts{,_mut} APIs to be unsafe.~~ And updates other documentations.
 
 **Implication:** Not able to create a "null pointer" version of `*dyn Foo` unless:
 
 * You use `Option<*dyn Foo>`, of course
 * We create some kind of "dummy" vtable that is structurally correct but has no actual functions within it; we would need a function for creating "valid-but-default" metadata as part of custom DST
 
+Update:
+  * It was pointed out by `steffahn` that `std::ptr::from_raw_parts` won't create fat pointer with invalid metadata.
+  * One of the remaining ways to create a pointer with invalid metadata is [by using `transmute`](https://github.com/rust-lang/rust/issues/81513#issuecomment-798158332).
+
+Question:
+  * Does the language UB happen at `transmute` site or coercion site?
+
 ### Alter vtable layout to be flat
 
 > Make vtables "flat", by removing all pointer indirections in vtables and appending all the data to the tail. This makes upcasting coercion codegen become adding an offset to the metadata scalar, so won't cause real UB. Will waste some more static bytes in multiple inheritance cases than before, might make embedded-dev people unhappy.
 
 Question from Niko:
-    * Is this sufficient? Does it imply we can't use `InBoundsGep`? Is that already true?
+  * Is this sufficient? Does it imply we can't use `InBoundsGep`? Is that already true?
 
 ### Make raw pointer unsizing unsafe
 
 > Announce that raw pointer unsizing coercion must happen in unsafe blocks, while other unsizing coercions can happen outside an unsafe block. This is actually a small breaking change. So need a future compat lint to migrate existing users dealing with raw pointers and some more changes to std(POC PR at #88239 explains the details but it's a bit long). A few other MIR-level details become observable by user: whether the compiler thinks it's a unsizing coercion or not.
-nikomatsakis: (cc @RalfJ, if you happen to be around)
+>
+> nikomatsakis: (cc @RalfJ, if you happen to be around)
 
 ## Conversation log
 
