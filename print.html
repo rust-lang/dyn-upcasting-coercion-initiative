@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>{{GROUP_NAME}} {{GROUP_TYPE}} Group</title>
+        <title>Dyn upcast initiative</title>
                 <meta name="robots" content="noindex" />
                 
 
@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html">Welcome</a></li><li class="chapter-item expanded "><a href="CHARTER.html">Charter</a></li><li class="chapter-item expanded "><a href="meetings/index.html">Meetings</a></li><li class="chapter-item expanded "><a href="draft-rfcs/index.html">Draft RFCs</a></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html">Welcome</a></li><li class="chapter-item expanded "><a href="CHARTER.html">Charter</a></li><li class="chapter-item expanded "><a href="draft-rfcs/index.html">Draft RFCs</a></li><li class="chapter-item expanded "><a href="design-questions/index.html">Design questions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="design-questions/upcast-safety.html">Upcast safety</a></li><li class="chapter-item expanded "><a href="design-questions/vtable-layout.html">Vtable layout</a></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -112,13 +112,13 @@
                         </button>
                                             </div>
 
-                    <h1 class="menu-title">{{GROUP_NAME}} {{GROUP_TYPE}} Group</h1>
+                    <h1 class="menu-title">Dyn upcast initiative</h1>
 
                     <div class="right-buttons">
                                                 <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                                                                        <a href="https://github.com/rust-lang/{{GROUP_SLUG}}" title="Git repository" aria-label="Git repository">
+                                                                        <a href="https://github.com/rust-lang/dyn-upcast-initiative" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
                                                 
@@ -147,97 +147,87 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="group_name-group_type-group"><a class="header" href="#group_name-group_type-group">{{GROUP_NAME}} {{GROUP_TYPE}} Group</a></h1>
-<!--
- This is the template for creating project groups in rust-lang. Be sure to go
- through all sections marked with `**FIX ME**`, and make sure that the text is
- correct, and feel free to replace/remove any part that's not relevant to
- your group.
-
- All of the text across all of the initial files uses the same group of
- variables to allow for easy search and replace. They are listed below.
-
- Example sed command: `sed -i '' 's/{{GROUP_NAME}}/Inline ASM/g' ./**/*.md`
- *Note* the `-i ''` is important as it is required on some platforms e.g. macOS
-
- * {{GROUP_NAME}} -> The display name of your group e.g. "Inline ASM".
- * {{GROUP_SLUG}} -> The url slug name of your group used for
-   `rust-lang/team` and repo name. e.g. "pg-inline-asm".
- * {{CHAT_PLATFORM}} -> The name of your chat app e.g. "Zulip".
- * {{CHAT_LINK}} -> The hyperlink to your discussions on the chat app
-   e.g. "https://rust-lang.zulipchat.com/#narrow/stream/216763-project-inline-asm".
--->
+                        <h1 id="dyn-upcast-initiative"><a class="header" href="#dyn-upcast-initiative">Dyn upcast initiative</a></h1>
 <!--
  Status badge advertising the project as being actively worked on. When the
  project has finished be sure to replace the active badge with a badge
  like: https://img.shields.io/badge/status-archived-grey.svg
 -->
 <p><img src="https://img.shields.io/badge/status-active-brightgreen.svg" alt="project group status: active" />
-<a href="https://rust-lang.github.io/%7B%7BGROUP_SLUG%7D%7D"><img src="https://img.shields.io/badge/MDBook-View%20Documentation-blue" alt="project group documentation" /></a></p>
-<p><strong>FIX ME</strong></p>
-<!--
- Provide a short introduction about your project group. Make sure to include any
- relevant links to information about your group.
--->
-<p>Welcome to the repository for the {{GROUP_NAME}} Project Group! This is the
-repository we use to organise our work. Please refer to our <a href="./CHARTER.html">charter</a> as well
-as our <a href="https://rust-lang.github.io/%7B%7BGROUP_SLUG%7D%7D">github pages website</a> for more information on our goals and
-current scope.</p>
-<p><strong>/FIX ME</strong></p>
+<a href="https://rust-lang.github.io/dyn-upcast-initiative"><img src="https://img.shields.io/badge/MDBook-View%20Documentation-blue" alt="project group documentation" /></a></p>
+<p>Welcome to the repository for the Dyn upcast initiative! This is the repository we use to organise our work. Please refer to our <a href="./CHARTER.html">charter</a> as well as our <a href="https://rust-lang.github.io/dyn-upcast-initiative">github pages website</a> for more information on our goals and current scope.</p>
 <h2 id="how-can-i-get-involved"><a class="header" href="#how-can-i-get-involved">How Can I Get Involved?</a></h2>
-<p><strong>FIX ME</strong></p>
-<!--
- List ways that people from outside your group can get involved and potentially
- become members, include what meetings your team has, and how a person could
- start participating and contributing. Make sure to mention the main platform
- your group hosts its discussions. Be sure to also include links to any
- other projects that your group maintains.
--->
-<p><a href="https://github.com/rust-lang/team/blob/master/teams/%7B%7BGROUP_TYPE%7D%7D-%7B%7BGROUP_SLUG%7D%7D.toml">You can find a list of the current members available
-on <code>rust-lang/team</code>.</a></p>
-<p>If you'd like to participate be sure to check out any of our <a href="/issues">open issues</a> on this
-repository.</p>
-<p>We also participate on <a href="%7B%7BCHAT_LINK%7D%7D">{{CHAT_PLATFORM}}</a>, feel free to introduce
-yourself over there and ask us any questions you have.</p>
-<p><strong>/FIX ME</strong></p>
+<p>Currently we are heads down on implementation questions.</p>
+<p>We also participate on <a href="%7B%7Bhttps://rust-lang.zulipchat.com/#narrow/stream/144729-wg-traits%7D%7D">{{Zulip}}</a>, feel free to introduce yourself over there and ask us any questions you have.</p>
 <h2 id="building-documentation"><a class="header" href="#building-documentation">Building Documentation</a></h2>
 <p>This repository is also an mdbook project. You can view and build it using the
 following command.</p>
 <pre><code>mdbook serve
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="group_name-charter"><a class="header" href="#group_name-charter">{{GROUP_NAME}} Charter</a></h1>
-<!--
- Provide an introduction summarising the goals and motivation behind your
- project group.
--->
+<div style="break-before: page; page-break-before: always;"></div><h1 id="dyn-upcast-charter"><a class="header" href="#dyn-upcast-charter">Dyn upcast Charter</a></h1>
 <h2 id="goals"><a class="header" href="#goals">Goals</a></h2>
-<!--
- Explain what changes you'd like to see your group your group to focus on, and
- how you plan to approach these issues. Focus on explaining the highest possible
- level of your change.
--->
-<h2 id="constraints-and-considerations"><a class="header" href="#constraints-and-considerations">Constraints And Considerations</a></h2>
-<!--
- Explain the scope of your group, what you have chosen not to include in
- your goals, and your motivations behind making them non-goals.
--->
+<ul>
+<li>To permit upcasting from <code>dyn Trait1</code> to <code>dyn Trait2</code> where <code>Trait1</code> is a subtype of <code>Trait2</code></li>
+</ul>
+<p>See the proposal in <a href="https://github.com/rust-lang/lang-team/issues/98">rust-lang/lang-team#98</a> for more information.</p>
+<h2 id="non-goals"><a class="header" href="#non-goals">Non-goals</a></h2>
+<ul>
+<li>To support <code>dyn Trait1 + Trait2</code> for general traits (this syntax naturally works, and should continue to work, with auto traits).</li>
+</ul>
 <h2 id="membership"><a class="header" href="#membership">Membership</a></h2>
-<!--
- Mention your initial membership and who has decided take the roles of
- shepherd(s) and liason.
--->
-<p><strong>Shepherd:</strong>
-<strong>Team Liason:</strong>
-<strong>Members:</strong></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="meetings"><a class="header" href="#meetings">Meetings</a></h1>
-<p>This folder contains the minutes of all the recorded meetings that have happened
-so far.</p>
+<p><strong>Owner:</strong> Charles Lew <a href="https://github.com/crlf0710">(crlf0710)</a>
+<strong>Team Liason:</strong> Niko Matsakis <a href="https://github.com/nikomatsakis">(nikomatsakis)</a></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="rfc-drafts"><a class="header" href="#rfc-drafts">RFC drafts</a></h1>
 <p>This folder contains drafts of RFCs that the group is preparing to submit.</p>
 <!--
 Once the group has submitted RFCs, the drafts should be deleted from this folder,
 and links to the pull requests on the RFC repository should be listed here.
 -->
+<div style="break-before: page; page-break-before: always;"></div><h1 id="design-questions"><a class="header" href="#design-questions">Design questions</a></h1>
+<p>Catalogs various interesting design questions that have arisen.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="upcast-safety"><a class="header" href="#upcast-safety">Upcast safety</a></h1>
+<h2 id="scenario"><a class="header" href="#scenario">Scenario</a></h2>
+<ul>
+<li>Casting <code>*dyn Foo</code> to <code>*dyn Bar</code> requires adjusting the vtable from a vtable for <code>Foo</code> to one for <code>Bar</code></li>
+<li>For raw pointers, the metadata can be supplied by the user with <code>from_raw_parts</code>
+<ul>
+<li>If that metadata is incorrect, this could cause UB:
+<ul>
+<li>our current vtable format requires loads, and the pointers may not be valid</li>
+<li>a flat vtable layout could give rise to out-of-bounds loads</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Unsafety is needed, but where?</li>
+</ul>
+<h2 id="options"><a class="header" href="#options">Options</a></h2>
+<h3 id="unsafe-to-create-a-dyn-foo"><a class="header" href="#unsafe-to-create-a-dyn-foo">Unsafe to create a <code>*dyn Foo</code></a></h3>
+<blockquote>
+<p>Announce that every fat pointer needs to have valid metadata part. Needs to switch the std::ptr::from_raw_parts{,_mut} APIs to be unsafe. And updates other documentations.</p>
+</blockquote>
+<p><strong>Implication:</strong> Not able to create a &quot;null pointer&quot; version of <code>*dyn Foo</code> unless:</p>
+<ul>
+<li>You use <code>Option&lt;*dyn Foo&gt;</code>, of course</li>
+<li>We create some kind of &quot;dummy&quot; vtable that is structurally correct but has no actual functions within it; we would need a function for creating &quot;valid-but-default&quot; metadata as part of custom DST</li>
+</ul>
+<h3 id="alter-vtable-layout-to-be-flat"><a class="header" href="#alter-vtable-layout-to-be-flat">Alter vtable layout to be flat</a></h3>
+<blockquote>
+<p>Make vtables &quot;flat&quot;, by removing all pointer indirections in vtables and appending all the data to the tail. This makes upcasting coercion codegen become adding an offset to the metadata scalar, so won't cause real UB. Will waste some more static bytes in multiple inheritance cases than before, might make embedded-dev people unhappy.</p>
+</blockquote>
+<p>Question from Niko:
+* Is this sufficient? Does it imply we can't use <code>InBoundsGep</code>? Is that already true?</p>
+<h3 id="make-raw-pointer-unsizing-unsafe"><a class="header" href="#make-raw-pointer-unsizing-unsafe">Make raw pointer unsizing unsafe</a></h3>
+<blockquote>
+<p>Announce that raw pointer unsizing coercion must happen in unsafe blocks, while other unsizing coercions can happen outside an unsafe block. This is actually a small breaking change. So need a future compat lint to migrate existing users dealing with raw pointers and some more changes to std(POC PR at #88239 explains the details but it's a bit long). A few other MIR-level details become observable by user: whether the compiler thinks it's a unsizing coercion or not.
+nikomatsakis: (cc @RalfJ, if you happen to be around)</p>
+</blockquote>
+<h2 id="conversation-log"><a class="header" href="#conversation-log">Conversation log</a></h2>
+<ul>
+<li><a href="https://zulip-archive.rust-lang.org/stream/144729-wg-traits/topic/object.20upcasting.html#250616592">2021-08-25</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="vtable-layout"><a class="header" href="#vtable-layout">Vtable layout</a></h1>
+<p><strong>FIXME</strong> document the layout and alternatives that were considered</p>
 
                     </main>
 

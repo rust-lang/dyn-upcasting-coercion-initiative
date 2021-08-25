@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Charter - {{GROUP_NAME}} {{GROUP_TYPE}} Group</title>
+        <title>Charter - Dyn upcast initiative</title>
                 
 
         <!-- Custom HTML head -->
@@ -82,7 +82,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html">Welcome</a></li><li class="chapter-item expanded "><a href="CHARTER.html" class="active">Charter</a></li><li class="chapter-item expanded "><a href="meetings/index.html">Meetings</a></li><li class="chapter-item expanded "><a href="draft-rfcs/index.html">Draft RFCs</a></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html">Welcome</a></li><li class="chapter-item expanded "><a href="CHARTER.html" class="active">Charter</a></li><li class="chapter-item expanded "><a href="draft-rfcs/index.html">Draft RFCs</a></li><li class="chapter-item expanded "><a href="design-questions/index.html">Design questions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="design-questions/upcast-safety.html">Upcast safety</a></li><li class="chapter-item expanded "><a href="design-questions/vtable-layout.html">Vtable layout</a></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -111,13 +111,13 @@
                         </button>
                                             </div>
 
-                    <h1 class="menu-title">{{GROUP_NAME}} {{GROUP_TYPE}} Group</h1>
+                    <h1 class="menu-title">Dyn upcast initiative</h1>
 
                     <div class="right-buttons">
                                                 <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                                                                        <a href="https://github.com/rust-lang/{{GROUP_SLUG}}" title="Git repository" aria-label="Git repository">
+                                                                        <a href="https://github.com/rust-lang/dyn-upcast-initiative" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
                                                 
@@ -146,30 +146,19 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="group_name-charter"><a class="header" href="#group_name-charter">{{GROUP_NAME}} Charter</a></h1>
-<!--
- Provide an introduction summarising the goals and motivation behind your
- project group.
--->
+                        <h1 id="dyn-upcast-charter"><a class="header" href="#dyn-upcast-charter">Dyn upcast Charter</a></h1>
 <h2 id="goals"><a class="header" href="#goals">Goals</a></h2>
-<!--
- Explain what changes you'd like to see your group your group to focus on, and
- how you plan to approach these issues. Focus on explaining the highest possible
- level of your change.
--->
-<h2 id="constraints-and-considerations"><a class="header" href="#constraints-and-considerations">Constraints And Considerations</a></h2>
-<!--
- Explain the scope of your group, what you have chosen not to include in
- your goals, and your motivations behind making them non-goals.
--->
+<ul>
+<li>To permit upcasting from <code>dyn Trait1</code> to <code>dyn Trait2</code> where <code>Trait1</code> is a subtype of <code>Trait2</code></li>
+</ul>
+<p>See the proposal in <a href="https://github.com/rust-lang/lang-team/issues/98">rust-lang/lang-team#98</a> for more information.</p>
+<h2 id="non-goals"><a class="header" href="#non-goals">Non-goals</a></h2>
+<ul>
+<li>To support <code>dyn Trait1 + Trait2</code> for general traits (this syntax naturally works, and should continue to work, with auto traits).</li>
+</ul>
 <h2 id="membership"><a class="header" href="#membership">Membership</a></h2>
-<!--
- Mention your initial membership and who has decided take the roles of
- shepherd(s) and liason.
--->
-<p><strong>Shepherd:</strong>
-<strong>Team Liason:</strong>
-<strong>Members:</strong></p>
+<p><strong>Owner:</strong> Charles Lew <a href="https://github.com/crlf0710">(crlf0710)</a>
+<strong>Team Liason:</strong> Niko Matsakis <a href="https://github.com/nikomatsakis">(nikomatsakis)</a></p>
 
                     </main>
 
@@ -179,7 +168,7 @@
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
-                                                    <a rel="next" href="meetings/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                                    <a rel="next" href="draft-rfcs/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -193,7 +182,7 @@
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
-                                    <a rel="next" href="meetings/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                    <a rel="next" href="draft-rfcs/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                             </nav>
