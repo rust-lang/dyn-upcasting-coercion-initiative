@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html">Welcome</a></li><li class="chapter-item expanded "><a href="CHARTER.html">Charter</a></li><li class="chapter-item expanded "><a href="draft-rfcs/index.html">Draft RFCs</a></li><li class="chapter-item expanded "><a href="design-questions/index.html">Design questions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="design-questions/upcast-safety.html">Upcast safety</a></li><li class="chapter-item expanded "><a href="design-questions/vtable-layout.html">Vtable layout</a></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html">Welcome</a></li><li class="chapter-item expanded "><a href="CHARTER.html">Charter</a></li><li class="chapter-item expanded "><a href="draft-rfcs/index.html">Draft RFCs</a></li><li class="chapter-item expanded "><a href="design-questions/index.html">Design questions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="discussion-summaries/definition.html">Definition</a></li><li class="chapter-item expanded "><a href="design-questions/upcast-safety.html">Upcast safety</a></li><li class="chapter-item expanded "><a href="design-questions/vtable-layout.html">Vtable layout and runtime behavior</a></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -185,6 +185,7 @@ and links to the pull requests on the RFC repository should be listed here.
 -->
 <div style="break-before: page; page-break-before: always;"></div><h1 id="design-questions"><a class="header" href="#design-questions">Design questions</a></h1>
 <p>Catalogs various interesting design questions that have arisen.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="definition"><a class="header" href="#definition">Definition</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="upcast-safety"><a class="header" href="#upcast-safety">Upcast safety</a></h1>
 <h2 id="scenario"><a class="header" href="#scenario">Scenario</a></h2>
 <ul>
@@ -204,30 +205,113 @@ and links to the pull requests on the RFC repository should be listed here.
 <h2 id="options"><a class="header" href="#options">Options</a></h2>
 <h3 id="unsafe-to-create-a-dyn-foo"><a class="header" href="#unsafe-to-create-a-dyn-foo">Unsafe to create a <code>*dyn Foo</code></a></h3>
 <blockquote>
-<p>Announce that every fat pointer needs to have valid metadata part. Needs to switch the std::ptr::from_raw_parts{,_mut} APIs to be unsafe. And updates other documentations.</p>
+<p>Announce that every fat pointer needs to have valid metadata part. <del>Needs to switch the std::ptr::from_raw_parts{,_mut} APIs to be unsafe.</del> And updates other documentations.</p>
 </blockquote>
 <p><strong>Implication:</strong> Not able to create a &quot;null pointer&quot; version of <code>*dyn Foo</code> unless:</p>
 <ul>
 <li>You use <code>Option&lt;*dyn Foo&gt;</code>, of course</li>
 <li>We create some kind of &quot;dummy&quot; vtable that is structurally correct but has no actual functions within it; we would need a function for creating &quot;valid-but-default&quot; metadata as part of custom DST</li>
 </ul>
+<p>Update:</p>
+<ul>
+<li>It was pointed out by <code>steffahn</code> that <code>std::ptr::from_raw_parts</code> won't create fat pointer with invalid metadata.</li>
+<li>One of the remaining ways to create a pointer with invalid metadata is <a href="https://github.com/rust-lang/rust/issues/81513#issuecomment-798158332">by using <code>transmute</code></a>.</li>
+</ul>
+<p>Question:</p>
+<ul>
+<li>Does the language UB happen at <code>transmute</code> site or coercion site?</li>
+</ul>
 <h3 id="alter-vtable-layout-to-be-flat"><a class="header" href="#alter-vtable-layout-to-be-flat">Alter vtable layout to be flat</a></h3>
 <blockquote>
 <p>Make vtables &quot;flat&quot;, by removing all pointer indirections in vtables and appending all the data to the tail. This makes upcasting coercion codegen become adding an offset to the metadata scalar, so won't cause real UB. Will waste some more static bytes in multiple inheritance cases than before, might make embedded-dev people unhappy.</p>
 </blockquote>
-<p>Question from Niko:
-* Is this sufficient? Does it imply we can't use <code>InBoundsGep</code>? Is that already true?</p>
+<p>Question from Niko:</p>
+<ul>
+<li>Is this sufficient? Does it imply we can't use <code>InBoundsGep</code>? Is that already true?</li>
+</ul>
 <h3 id="make-raw-pointer-unsizing-unsafe"><a class="header" href="#make-raw-pointer-unsizing-unsafe">Make raw pointer unsizing unsafe</a></h3>
 <blockquote>
-<p>Announce that raw pointer unsizing coercion must happen in unsafe blocks, while other unsizing coercions can happen outside an unsafe block. This is actually a small breaking change. So need a future compat lint to migrate existing users dealing with raw pointers and some more changes to std(POC PR at #88239 explains the details but it's a bit long). A few other MIR-level details become observable by user: whether the compiler thinks it's a unsizing coercion or not.
-nikomatsakis: (cc @RalfJ, if you happen to be around)</p>
+<p>Announce that raw pointer unsizing coercion must happen in unsafe blocks, while other unsizing coercions can happen outside an unsafe block. This is actually a small breaking change. So need a future compat lint to migrate existing users dealing with raw pointers and some more changes to std(POC PR at #88239 explains the details but it's a bit long). A few other MIR-level details become observable by user: whether the compiler thinks it's a unsizing coercion or not.</p>
+<p>nikomatsakis: (cc @RalfJ, if you happen to be around)</p>
 </blockquote>
 <h2 id="conversation-log"><a class="header" href="#conversation-log">Conversation log</a></h2>
 <ul>
 <li><a href="https://zulip-archive.rust-lang.org/stream/144729-wg-traits/topic/object.20upcasting.html#250616592">2021-08-25</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="vtable-layout"><a class="header" href="#vtable-layout">Vtable layout</a></h1>
-<p><strong>FIXME</strong> document the layout and alternatives that were considered</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="vtable-format-to-support-dyn-upcasting-coercion"><a class="header" href="#vtable-format-to-support-dyn-upcasting-coercion">Vtable format to support dyn upcasting coercion</a></h1>
+<p>This current design was proposed by <code>Mario Carneiro</code> based on previous proposals on <a href="https://zulip-archive.rust-lang.org/stream/243200-t-lang/major-changes/topic/Trait.20Upcasting.20lang-team.2398.html#242876426">Zulip discussion</a>. It's a hybrid approach taking the benefits of both a &quot;flat&quot; design, and a &quot;pointer&quot;-based design.</p>
+<p>This is implemented in <a href="https://github.com/rust-lang/rust/pull/86461">#86461</a>.</p>
+<p>The vtable is generated by this algorithm in principle for a type <code>T</code> and a trait <code>Tr</code>:</p>
+<ol>
+<li>First emit the header part, including <code>MetadataDropInPlace</code>, <code>MetadataSize</code>, <code>MetadataAlign</code> items.</li>
+<li>Create a tree of all the supertraits of this <code>TraitRef</code>, by filtering out all of duplicates.</li>
+<li>Collect a set of <code>TraitRef</code>s consisting the trait and its first supertrait and its first supertrait's super trait,... and so on. Call this set <code>PrefixSet</code></li>
+<li>Traverse the tree in post-order, for each <code>TraitRef</code> emit all its associated functions as either <code>Method</code> or <code>Vacant</code> entries. If this <code>TraitRef</code> is not in <code>PrefixSet</code>, emit a <code>TraitVPtr</code> containing a constant pointer to the vtable generated for the type <code>T</code> and this <code>TraitRef</code>.</li>
+</ol>
+<h2 id="example"><a class="header" href="#example">Example</a></h2>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>trait A {
+    fn foo_a(&amp;self) {}
+}
+
+trait B: A {
+    fn foo_b(&amp;self) {}
+}
+
+trait C: A {
+    fn foo_c(&amp;self) {}
+}
+
+trait D: B + C {
+    fn foo_d(&amp;self) {}
+}
+<span class="boring">}
+</span></code></pre></pre>
+<pre><code class="language-text">Vtable entries for `&lt;S as D&gt;`: [
+    MetadataDropInPlace,
+    MetadataSize,
+    MetadataAlign,
+    Method(&lt;S as A&gt;::foo_a),
+    Method(&lt;S as B&gt;::foo_b),
+    Method(&lt;S as C&gt;::foo_c),
+    TraitVPtr(&lt;S as C&gt;),
+    Method(&lt;S as D&gt;::foo_d),
+]
+
+Vtable entries for `&lt;S as C&gt;`: [
+    MetadataDropInPlace,
+    MetadataSize,
+    MetadataAlign,
+    Method(&lt;S as A&gt;::foo_a),
+    Method(&lt;S as C&gt;::foo_c),
+]
+</code></pre>
+<h2 id="runtime-behavior-for-dyn-upcasting-coercion"><a class="header" href="#runtime-behavior-for-dyn-upcasting-coercion">Runtime behavior for dyn upcasting coercion</a></h2>
+<p>At the codegen time, the same algorithm above is performed for the source principal trait and the source trait object type. If the target principal trait is in the <code>PrefixSet</code> set, this coercion is a no-op.</p>
+<p>If the target principal trait is not in the <code>PrefixSet</code>, generate code that read the data pointer from the
+corresponding <code>TraitVPtr</code> slot.</p>
+<h1 id="alternatives"><a class="header" href="#alternatives">Alternatives</a></h1>
+<h2 id="flat-design"><a class="header" href="#flat-design">Flat design</a></h2>
+<p>The vtable is generated by this algorithm in principle for a type <code>T</code> and a trait <code>Tr</code>:</p>
+<ol>
+<li>Create a tree of all the supertraits of this <code>TraitRef</code>, duplicate for the cyclic cases.</li>
+<li>Traverse the tree in post-order, for each <code>TraitRef</code>, 
+<ol>
+<li>if it has no supertrait, emit a header part, including <code>MetadataDropInPlace</code>, <code>MetadataSize</code>, <code>MetadataAlign</code> items.</li>
+<li>emit all its associated functions as either <code>Method</code> or <code>Vacant</code> entries.</li>
+</ol>
+</li>
+</ol>
+<h3 id="cons"><a class="header" href="#cons">Cons</a></h3>
+<p>If there is a lot of diamond inheritance that could result in exponential blowup of the vtable
+for example, <code>trait A(n+1): Bn + Cn {}, trait Bn: An { fn bn(&amp;self); }, trait Cn: An { fn cn(&amp;self); }</code></p>
+<p><code>the vtable for An will contain 2^n DSAs</code></p>
+<h2 id="pointer-based-design"><a class="header" href="#pointer-based-design">Pointer-based design</a></h2>
+<p>All traits have their own vtables, and embedded all links to supertraits in the vtables</p>
+<h3 id="cons-1"><a class="header" href="#cons-1">Cons</a></h3>
+<p>Codegen regression for single-inheritance cases, which is very widely used.</p>
 
                     </main>
 
