@@ -1,32 +1,13 @@
-# {{GROUP_NAME}} Charter
-<!--
- Provide an introduction summarising the goals and motivation behind your
- project group.
--->
+# Dyn upcasting coercion Initiative Charter
 
 ## Goals
 
-<!--
- Explain what changes you'd like to see your group your group to focus on, and
- how you plan to approach these issues. Focus on explaining the highest possible
- level of your change.
--->
+* Deliver an initial version of "dyn upcasting coercion" feature.
 
-## Constraints And Considerations
-
-<!--
- Explain the scope of your group, what you have chosen not to include in
- your goals, and your motivations behind making them non-goals.
--->
+The dyn upcasting coercion feature is to support upcasting dyn Trait values to supertraits.
 
 
 ## Membership
 
-<!--
- Mention your initial membership and who has decided take the roles of
- shepherd(s) and liason.
--->
-
-**Shepherd:**
-**Team Liason:**
-**Members:**
+* **Owner:** crlf0710
+* **Liaison:** nikomatsakis
