@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Welcome - Dyn upcast initiative</title>
+        <title>👋 Welcome - Dyn upcast initiative</title>
                 
 
         <!-- Custom HTML head -->
@@ -82,7 +82,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html" class="active">Welcome</a></li><li class="chapter-item expanded "><a href="CHARTER.html">Charter</a></li><li class="chapter-item expanded "><a href="draft-rfcs/index.html">Draft RFCs</a></li><li class="chapter-item expanded "><a href="design-questions/index.html">Design questions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="discussion-summaries/definition.html">Definition</a></li><li class="chapter-item expanded "><a href="design-questions/upcast-safety.html">Upcast safety</a></li><li class="chapter-item expanded "><a href="design-questions/vtable-layout.html">Vtable layout and runtime behavior</a></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html" class="active">👋 Welcome</a></li><li class="chapter-item expanded "><a href="CHARTER.html">📜 Charter</a></li><li class="chapter-item expanded "><a href="explainer.html">📚 Explainer</a></li><li class="chapter-item expanded "><a href="design-discussions/index.html">💬 Design discussions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="design-discussions/definition.html">Definition</a></li><li class="chapter-item expanded "><a href="design-discussions/upcast-safety.html">Upcast safety</a></li><li class="chapter-item expanded "><a href="design-discussions/vtable-layout.html">Vtable layout and runtime behavior</a></li></ol></li><li class="chapter-item expanded "><a href="FAQ.html">😕 FAQ</a></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -146,18 +146,36 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="dyn-upcast-initiative"><a class="header" href="#dyn-upcast-initiative">Dyn upcast initiative</a></h1>
-<!--
- Status badge advertising the project as being actively worked on. When the
- project has finished be sure to replace the active badge with a badge
- like: https://img.shields.io/badge/status-archived-grey.svg
--->
-<p><img src="https://img.shields.io/badge/status-active-brightgreen.svg" alt="project group status: active" />
-<a href="https://rust-lang.github.io/dyn-upcast-initiative"><img src="https://img.shields.io/badge/MDBook-View%20Documentation-blue" alt="project group documentation" /></a></p>
-<p>Welcome to the repository for the Dyn upcast initiative! This is the repository we use to organise our work. Please refer to our <a href="./CHARTER.html">charter</a> as well as our <a href="https://rust-lang.github.io/dyn-upcast-initiative">github pages website</a> for more information on our goals and current scope.</p>
+                        <h1 id="dyn-upcasting-coercion-initiative"><a class="header" href="#dyn-upcasting-coercion-initiative">Dyn upcasting coercion initiative</a></h1>
+<p><img src="https://img.shields.io/badge/status-active-brightgreen.svg" alt="initiative status: active" /></p>
+<h2 id="what-is-this"><a class="header" href="#what-is-this">What is this?</a></h2>
+<p>This page tracks the work of the dyn upcasting coercion <a href="https://lang-team.rust-lang.org/initiatives.html">initiative</a>! To learn more about what we are trying to do, and to find out the people who are doing it, take a look at the <a href="./CHARTER.html">charter</a>. </p>
+<h2 id="current-status"><a class="header" href="#current-status">Current status</a></h2>
+<p>The following table lists of the stages of an initiative, along with links to the artifacts that will be produced during that stage.</p>
+<table><thead><tr><th>Stage</th><th>State</th><th>Artifact(s)</th></tr></thead><tbody>
+<tr><td><a href="https://lang-team.rust-lang.org/initiatives/process/stages/proposal.html">Proposal</a></td><td>✅</td><td><a href="https://github.com/rust-lang/lang-team/issues/98">Proposal issue</a></td></tr>
+<tr><td></td><td></td><td><a href="./CHARTER.html">Charter</a></td></tr>
+<tr><td></td><td></td><td><a href="https://github.com/rust-lang/rust/">Tracking issue</a></td></tr>
+<tr><td><a href="https://lang-team.rust-lang.org/initiatives/process/stages/development.html">Development</a></td><td>🦀</td><td><a href="./explainer.html">Explainer</a></td></tr>
+<tr><td><a href="https://lang-team.rust-lang.org/initiatives/process/stages/feature-complete.html">Feature complete</a></td><td>💤</td><td>Stabilization report</td></tr>
+<tr><td><a href="https://lang-team.rust-lang.org/initiatives/process/stages/stabilized.html">Stabilized</a></td><td>💤</td><td></td></tr>
+</tbody></table>
+<p>Key:</p>
+<ul>
+<li>✅ -- phase complete</li>
+<li>🦀 -- phase in progress</li>
+<li>💤 -- phase not started yet</li>
+</ul>
 <h2 id="how-can-i-get-involved"><a class="header" href="#how-can-i-get-involved">How Can I Get Involved?</a></h2>
-<p>Currently we are heads down on implementation questions.</p>
-<p>We also participate on <a href="%7B%7Bhttps://rust-lang.zulipchat.com/#narrow/stream/144729-wg-traits%7D%7D">{{Zulip}}</a>, feel free to introduce yourself over there and ask us any questions you have.</p>
+<ul>
+<li>Check for 'help wanted' issues on this repository!</li>
+<li>If you would like to help with development, please contact the <a href="./charter.html#membership">owner</a> to find out if there are things that need doing.</li>
+<li>If you would like to help with the design, check the list of active <a href="./design-questions/README.html">design questions</a> first. </li>
+<li>If you have questions about the design, you can file an issue, but be sure to check the <a href="./FAQ.html">FAQ</a> or the <a href="./design-questions/README.html">design-questions</a> first to see if there is already something that covers your topic.</li>
+<li>If you are using the feature and would like to provide feedback about your experiences, please [open a &quot;experience report&quot; issue].</li>
+<li>If you are using the feature and would like to report a bug, please open a regular issue.</li>
+</ul>
+<p>We also participate on <a href="https://rust-lang.zulipchat.com/#narrow/stream/144729-wg-traits">Zulip</a>, feel free to introduce yourself over there and ask us any questions you have.</p>
 <h2 id="building-documentation"><a class="header" href="#building-documentation">Building Documentation</a></h2>
 <p>This repository is also an mdbook project. You can view and build it using the
 following command.</p>

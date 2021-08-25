@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>📜 Charter - Dyn upcast initiative</title>
+        <title>Vtable layout and runtime behavior - Dyn upcast initiative</title>
                 
 
         <!-- Custom HTML head -->
@@ -14,21 +14,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-                <link rel="icon" href="favicon.svg">
-                        <link rel="shortcut icon" href="favicon.png">
-                <link rel="stylesheet" href="css/variables.css">
-        <link rel="stylesheet" href="css/general.css">
-        <link rel="stylesheet" href="css/chrome.css">
-                <link rel="stylesheet" href="css/print.css" media="print">
+                <link rel="icon" href="../favicon.svg">
+                        <link rel="shortcut icon" href="../favicon.png">
+                <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+                <link rel="stylesheet" href="../css/print.css" media="print">
         
         <!-- Fonts -->
-        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-                <link rel="stylesheet" href="fonts/fonts.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+                <link rel="stylesheet" href="../fonts/fonts.css">
         
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         
@@ -36,7 +36,7 @@
     <body>
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
-            var path_to_root = "";
+            var path_to_root = "../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
@@ -82,7 +82,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html">👋 Welcome</a></li><li class="chapter-item expanded "><a href="CHARTER.html" class="active">📜 Charter</a></li><li class="chapter-item expanded "><a href="explainer.html">📚 Explainer</a></li><li class="chapter-item expanded "><a href="design-discussions/index.html">💬 Design discussions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="design-discussions/definition.html">Definition</a></li><li class="chapter-item expanded "><a href="design-discussions/upcast-safety.html">Upcast safety</a></li><li class="chapter-item expanded "><a href="design-discussions/vtable-layout.html">Vtable layout and runtime behavior</a></li></ol></li><li class="chapter-item expanded "><a href="FAQ.html">😕 FAQ</a></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../index.html">👋 Welcome</a></li><li class="chapter-item expanded "><a href="../CHARTER.html">📜 Charter</a></li><li class="chapter-item expanded "><a href="../explainer.html">📚 Explainer</a></li><li class="chapter-item expanded "><a href="../design-discussions/index.html">💬 Design discussions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../design-discussions/definition.html">Definition</a></li><li class="chapter-item expanded "><a href="../design-discussions/upcast-safety.html">Upcast safety</a></li><li class="chapter-item expanded "><a href="../design-discussions/vtable-layout.html" class="active">Vtable layout and runtime behavior</a></li></ol></li><li class="chapter-item expanded "><a href="../FAQ.html">😕 FAQ</a></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -114,7 +114,7 @@
                     <h1 class="menu-title">Dyn upcast initiative</h1>
 
                     <div class="right-buttons">
-                                                <a href="print.html" title="Print this book" aria-label="Print this book">
+                                                <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                                                                         <a href="https://github.com/rust-lang/dyn-upcast-initiative" title="Git repository" aria-label="Git repository">
@@ -146,54 +146,90 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="dyn-upcast-charter"><a class="header" href="#dyn-upcast-charter">Dyn upcast Charter</a></h1>
-<h2 id="goals"><a class="header" href="#goals">Goals</a></h2>
-<h3 id="summary-and-problem-statement"><a class="header" href="#summary-and-problem-statement">Summary and problem statement</a></h3>
-<ul>
-<li>Add the <code>trait_upcasting</code> feature to the language.</li>
-</ul>
-<h3 id="motivation-use-cases-and-solution-sketches"><a class="header" href="#motivation-use-cases-and-solution-sketches">Motivation, use-cases, and solution sketches</a></h3>
-<ul>
-<li>The <code>trait_upcasting</code> feature adds support for trait upcasting coercion. This allows a
-trait object of type <code>dyn Bar</code> to be cast to a trait object of type <code>dyn Foo</code>
-so long as <code>Bar: Foo</code>.</li>
-</ul>
-<pre><pre class="playground"><code class="language-rust edition2018">
+                        <h1 id="vtable-format-to-support-dyn-upcasting-coercion"><a class="header" href="#vtable-format-to-support-dyn-upcasting-coercion">Vtable format to support dyn upcasting coercion</a></h1>
+<p>This current design was proposed by <code>Mario Carneiro</code> based on previous proposals on <a href="https://zulip-archive.rust-lang.org/stream/243200-t-lang/major-changes/topic/Trait.20Upcasting.20lang-team.2398.html#242876426">Zulip discussion</a>. It's a hybrid approach taking the benefits of both a &quot;flat&quot; design, and a &quot;pointer&quot;-based design.</p>
+<p>This is implemented in <a href="https://github.com/rust-lang/rust/pull/86461">#86461</a>.</p>
+<p>The vtable is generated by this algorithm in principle for a type <code>T</code> and a trait <code>Tr</code>:</p>
+<ol>
+<li>First emit the header part, including <code>MetadataDropInPlace</code>, <code>MetadataSize</code>, <code>MetadataAlign</code> items.</li>
+<li>Create a tree of all the supertraits of this <code>TraitRef</code>, by filtering out all of duplicates.</li>
+<li>Collect a set of <code>TraitRef</code>s consisting the trait and its first supertrait and its first supertrait's super trait,... and so on. Call this set <code>PrefixSet</code></li>
+<li>Traverse the tree in post-order, for each <code>TraitRef</code> emit all its associated functions as either <code>Method</code> or <code>Vacant</code> entries. If this <code>TraitRef</code> is not in <code>PrefixSet</code>, emit a <code>TraitVPtr</code> containing a constant pointer to the vtable generated for the type <code>T</code> and this <code>TraitRef</code>.</li>
+</ol>
+<h2 id="example"><a class="header" href="#example">Example</a></h2>
+<pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
-</span>#![feature(trait_upcasting)]
+</span><span class="boring">fn main() {
+</span>trait A {
+    fn foo_a(&amp;self) {}
+}
 
-<span class="boring">fn main() {
-</span>trait Foo {}
+trait B: A {
+    fn foo_b(&amp;self) {}
+}
 
-trait Bar: Foo {}
+trait C: A {
+    fn foo_c(&amp;self) {}
+}
 
-impl Foo for i32 {}
-
-impl&lt;T: Foo + ?Sized&gt; Bar for T {}
-
-let foo: &amp;dyn Foo = &amp;123;
-let bar: &amp;dyn Bar = foo;
+trait D: B + C {
+    fn foo_d(&amp;self) {}
+}
 <span class="boring">}
 </span></code></pre></pre>
-<h3 id="non-goals"><a class="header" href="#non-goals">Non-goals</a></h3>
-<ul>
-<li>To support <code>dyn Trait1 + Trait2</code> for general traits (this syntax naturally works, and should continue to work, with auto traits).</li>
-</ul>
-<h2 id="membership"><a class="header" href="#membership">Membership</a></h2>
-<table><thead><tr><th>Role</th><th>Github</th></tr></thead><tbody>
-<tr><td>[Owner]</td><td><a href="https://github.com/crlf0710">crlf0710</a></td></tr>
-<tr><td>[Liaison]</td><td><a href="https://github.com/nikomatsakis">nikomatsakis</a></td></tr>
-</tbody></table>
+<pre><code class="language-text">Vtable entries for `&lt;S as D&gt;`: [
+    MetadataDropInPlace,
+    MetadataSize,
+    MetadataAlign,
+    Method(&lt;S as A&gt;::foo_a),
+    Method(&lt;S as B&gt;::foo_b),
+    Method(&lt;S as C&gt;::foo_c),
+    TraitVPtr(&lt;S as C&gt;),
+    Method(&lt;S as D&gt;::foo_d),
+]
+
+Vtable entries for `&lt;S as C&gt;`: [
+    MetadataDropInPlace,
+    MetadataSize,
+    MetadataAlign,
+    Method(&lt;S as A&gt;::foo_a),
+    Method(&lt;S as C&gt;::foo_c),
+]
+</code></pre>
+<h2 id="runtime-behavior-for-dyn-upcasting-coercion"><a class="header" href="#runtime-behavior-for-dyn-upcasting-coercion">Runtime behavior for dyn upcasting coercion</a></h2>
+<p>At the codegen time, the same algorithm above is performed for the source principal trait and the source trait object type. If the target principal trait is in the <code>PrefixSet</code> set, this coercion is a no-op.</p>
+<p>If the target principal trait is not in the <code>PrefixSet</code>, generate code that read the data pointer from the
+corresponding <code>TraitVPtr</code> slot.</p>
+<h1 id="alternatives"><a class="header" href="#alternatives">Alternatives</a></h1>
+<h2 id="flat-design"><a class="header" href="#flat-design">Flat design</a></h2>
+<p>The vtable is generated by this algorithm in principle for a type <code>T</code> and a trait <code>Tr</code>:</p>
+<ol>
+<li>Create a tree of all the supertraits of this <code>TraitRef</code>, duplicate for the cyclic cases.</li>
+<li>Traverse the tree in post-order, for each <code>TraitRef</code>, 
+<ol>
+<li>if it has no supertrait, emit a header part, including <code>MetadataDropInPlace</code>, <code>MetadataSize</code>, <code>MetadataAlign</code> items.</li>
+<li>emit all its associated functions as either <code>Method</code> or <code>Vacant</code> entries.</li>
+</ol>
+</li>
+</ol>
+<h3 id="cons"><a class="header" href="#cons">Cons</a></h3>
+<p>If there is a lot of diamond inheritance that could result in exponential blowup of the vtable
+for example, <code>trait A(n+1): Bn + Cn {}, trait Bn: An { fn bn(&amp;self); }, trait Cn: An { fn cn(&amp;self); }</code></p>
+<p><code>the vtable for An will contain 2^n DSAs</code></p>
+<h2 id="pointer-based-design"><a class="header" href="#pointer-based-design">Pointer-based design</a></h2>
+<p>All traits have their own vtables, and embedded all links to supertraits in the vtables</p>
+<h3 id="cons-1"><a class="header" href="#cons-1">Cons</a></h3>
+<p>Codegen regression for single-inheritance cases, which is very widely used.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                                                    <a rel="prev" href="index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                                    <a rel="prev" href="../design-discussions/upcast-safety.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
-                                                    <a rel="next" href="explainer.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                                    <a rel="next" href="../FAQ.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -203,11 +239,11 @@ let bar: &amp;dyn Bar = foo;
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                                    <a rel="prev" href="index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                    <a rel="prev" href="../design-discussions/upcast-safety.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
-                                    <a rel="next" href="explainer.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                    <a rel="next" href="../FAQ.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                             </nav>
@@ -222,13 +258,13 @@ let bar: &amp;dyn Bar = foo;
         </script>
         
         
-                <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+                <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
         
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Custom JS scripts -->
         
