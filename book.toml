@@ -1,10 +1,10 @@
 [book]
-authors = ["{{GROUP_NAME}} Members"]
+authors = ["Dyn upcast Members"]
 language = "en"
 multilingual = false
 src = "."
-title = "{{GROUP_NAME}} {{GROUP_TYPE}} Group"
+title = "Dyn upcast initiative"
 
 [output.html]
 no-section-label=true
-git-repository-url="https://github.com/rust-lang/{{GROUP_SLUG}}"
+git-repository-url="https://github.com/rust-lang/dyn-upcast-initiative"

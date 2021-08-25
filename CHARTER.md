@@ -1,32 +1,16 @@
-# {{GROUP_NAME}} Charter
-<!--
- Provide an introduction summarising the goals and motivation behind your
- project group.
--->
+# Dyn upcast Charter
 
 ## Goals
 
-<!--
- Explain what changes you'd like to see your group your group to focus on, and
- how you plan to approach these issues. Focus on explaining the highest possible
- level of your change.
--->
+* To permit upcasting from `dyn Trait1` to `dyn Trait2` where `Trait1` is a subtype of `Trait2`
 
-## Constraints And Considerations
+See the proposal in [rust-lang/lang-team#98](https://github.com/rust-lang/lang-team/issues/98) for more information.
 
-<!--
- Explain the scope of your group, what you have chosen not to include in
- your goals, and your motivations behind making them non-goals.
--->
+## Non-goals
 
+* To support `dyn Trait1 + Trait2` for general traits (this syntax naturally works, and should continue to work, with auto traits).
 
 ## Membership
 
-<!--
- Mention your initial membership and who has decided take the roles of
- shepherd(s) and liason.
--->
-
-**Shepherd:**
-**Team Liason:**
-**Members:**
+**Owner:** Charles Lew [(crlf0710)](https://github.com/crlf0710)
+**Team Liason:** Niko Matsakis [(nikomatsakis)](https://github.com/nikomatsakis)
