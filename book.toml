@@ -7,4 +7,4 @@ title = "Dyn upcast initiative"
 
 [output.html]
 no-section-label=true
-git-repository-url="https://github.com/rust-lang/dyn-upcast-initiative"
+git-repository-url="https://github.com/rust-lang/dyn-upcasting-coercion-initiative"

@@ -110,7 +110,7 @@
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/rust-lang/dyn-upcast-initiative" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/rust-lang/dyn-upcasting-coercion-initiative" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
                     </div>
@@ -162,8 +162,8 @@ impl Foo for i32 {}
 
 impl&lt;T: Foo + ?Sized&gt; Bar for T {}
 
-let foo: &amp;dyn Foo = &amp;123;
-let bar: &amp;dyn Bar = foo;
+let bar: &amp;dyn Bar = &amp;123;
+let foo: &amp;dyn Foo = bar;
 <span class="boring">}
 </span></code></pre></pre>
 <h3 id="non-goals"><a class="header" href="#non-goals">Non-goals</a></h3>
