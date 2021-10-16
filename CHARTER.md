@@ -23,8 +23,8 @@ impl Foo for i32 {}
 
 impl<T: Foo + ?Sized> Bar for T {}
 
-let foo: &dyn Foo = &123;
-let bar: &dyn Bar = foo;
+let bar: &dyn Bar = &123;
+let foo: &dyn Foo = bar;
 ```
 
 ### Non-goals
