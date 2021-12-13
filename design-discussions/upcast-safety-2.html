@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../index.html">👋 Welcome</a></li><li class="chapter-item expanded "><a href="../updates.html">✏️ Updates</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../updates/2021-oct.html">2021-Oct</a></li></ol></li><li class="chapter-item expanded "><a href="../CHARTER.html">📜 Charter</a></li><li class="chapter-item expanded "><a href="../explainer.html">📚 Explainer</a></li><li class="chapter-item expanded "><a href="../design-discussions/index.html">💬 Design discussions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../design-discussions/definition.html">Definition</a></li><li class="chapter-item expanded "><a href="../design-discussions/upcast-safety-2.html" class="active">Upcast safety</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../design-discussions/upcast-safety.html">Older draft 1</a></li></ol></li><li class="chapter-item expanded "><a href="../design-discussions/vtable-layout.html">Vtable layout and runtime behavior</a></li></ol></li><li class="chapter-item expanded "><a href="../FAQ.html">😕 FAQ</a></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="../index.html">👋 Welcome</a></li><li class="chapter-item "><a href="../updates.html">✏️ Updates</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../updates/2021-oct.html">2021-Oct</a></li></ol></li><li class="chapter-item "><a href="../CHARTER.html">📜 Charter</a></li><li class="chapter-item "><a href="../explainer.html">📚 Explainer</a></li><li class="chapter-item expanded "><a href="../design-discussions/index.html">💬 Design discussions</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../design-discussions/definition.html">Definition</a></li><li class="chapter-item expanded "><a href="../design-discussions/upcast-safety-2.html" class="active">Upcast safety</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../design-discussions/upcast-safety.html">Older draft 1</a></li></ol></li><li class="chapter-item "><a href="../design-discussions/vtable-layout.html">Vtable layout and runtime behavior</a></li></ol></li><li class="chapter-item "><a href="../FAQ.html">😕 FAQ</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -112,6 +112,9 @@
                         </a>
                         <a href="https://github.com/rust-lang/dyn-upcasting-coercion-initiative" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/dyn-upcasting-coercion-initiative/edit/master/./design-discussions/upcast-safety-2.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
                         </a>
                     </div>
                 </div>
@@ -150,7 +153,7 @@
 <li>If:
 <ul>
 <li>dyn upcast coercions are a kind of unsize coercion</li>
-<li>the <a href="#Validity-versus-safety-invariants">safety invariant</a> for <code>*const dyn Foo</code> permits an invalid vtable</li>
+<li>the <a href="#validity-versus-safety-invariants">safety invariant</a> for <code>*const dyn Foo</code> permits an invalid vtable</li>
 </ul>
 </li>
 <li>Then:

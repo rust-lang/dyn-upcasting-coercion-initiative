@@ -8,3 +8,9 @@ title = "Dyn upcast initiative"
 [output.html]
 no-section-label=true
 git-repository-url="https://github.com/rust-lang/dyn-upcasting-coercion-initiative"
+edit-url-template="https://github.com/rust-lang/dyn-upcasting-coercion-initiative/edit/master/{path}"
+site-url="/dyn-upcasting-coercion-initiative/"
+
+[output.html.fold]
+enable = true
+level = 0
