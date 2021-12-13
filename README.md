@@ -17,7 +17,7 @@ The following table lists of the stages of an initiative, along with links to th
 | ------------------------------------- | ----- | ----------- |
 | [Proposal]                            | ✅    | [Proposal issue](https://github.com/rust-lang/lang-team/issues/98) |
 |                                       |       | [Charter](./CHARTER.md) |
-|                                       |       | [Tracking issue](https://github.com/rust-lang/rust/) |
+|                                       |       | [Tracking issue](https://github.com/rust-lang/rust/issues/65991) |
 | [Development]                         | 🦀    | [Explainer](./explainer.md) | 
 | [Feature complete]                    | 💤    | Stabilization report |
 | [Stabilized]                          | 💤    | |
