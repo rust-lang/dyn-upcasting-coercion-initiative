@@ -8,7 +8,8 @@
 - [📚 Explainer](./explainer.md)
 - [💬 Design discussions](./design-discussions/README.md)
     - [Definition](./design-discussions/definition.md)
-    - [Upcast safety](./design-discussions/upcast-safety.md)
+    - [Upcast safety](./design-discussions/upcast-safety-2.md)
+        - [Older draft 1](./design-discussions/upcast-safety.md)
     - [Vtable layout and runtime behavior](./design-discussions/vtable-layout.md)
 - [😕 FAQ](./FAQ.md)
 
