@@ -173,7 +173,7 @@ We could adjust the vtable layout for a subtrait to include embedded copies of a
 
 ## Appendices
 
-[appendix]: #Validity-versus-safety-invariants
+[appendix]: #validity-versus-safety-invariants
 
 ### Validity versus safety invariants
 
