@@ -271,44 +271,24 @@ fn convert(x: *const dyn Sub) -&gt; *const dyn Sup {
 <li>Implicit unsizing operations on raw pointers like <code>*const dyn SubTrait</code> would work sometimes, but those unsizing operations that require the metadata meet some sort of condition would require an explicit function call (e.g. the proposal below adds an unsafe function <code>unsize_raw_pointer</code>).</li>
 </ul>
 </li>
-<li>Raw pointers have a safety invariant that puts conditions on metadata 
+<li>Raw pointers have a validity or safety invariant that puts conditions on metadata 
 <ul>
-<li>There are degrees in terms of how strict those conditions can be,</li>
+<li>There are options in terms of when this invariant must hold and how strict the invariant must be, but the upshot is that whenever you synthesize the metadata for a raw, wide pointer (e.g., from a transmute), you need to ensure that this metadata comes from some valid source, and is not just garbage. This is contrast to the data pointer, which can generally be arbitrary bytes (though not unininitialized).</li>
 </ul>
 </li>
 </ul>
-<p>The first option has the following advantages:</p>
+<h3 id="why-prefer-unsafe-raw-pointer-upcasting"><a class="header" href="#why-prefer-unsafe-raw-pointer-upcasting">Why prefer unsafe raw pointer upcasting?</a></h3>
+<p>Raw pointers have traditionally been viewed as &quot;untrusted data until they are used&quot;. This is why dereferencing a raw pointer is unsafe: that's the point where it must be valid. It makes sense to extend this model to the metadata as well. When working with raw pointers and unsafe code, implicit operations like upcasting are a bug, not a feature, so it's useful to segregate them out and make them explicit via some kind of function call. It does require adding a new trait (see below) to the unsizing mechanism, but it only requires an internal &quot;implementation&quot; trait, and doesn't affect the &quot;main trait&quot; (<code>CoerceUnsized</code>).</p>
+<p>Besides, so long as the validity/safety invariants remain in flux (which they will be for a while yet), this choice is forwards compatible with the others. We have the option to remove the &quot;unsafe upcast&quot; and merge it with safe upcast and strengthen the relevant invariant(s).</p>
+<h3 id="why-prefer-unsafe-some-form-of-invariant"><a class="header" href="#why-prefer-unsafe-some-form-of-invariant">Why prefer unsafe some form of invariant?</a></h3>
+<p>It's not clear why one would ever have invalid metadata in a wide pointer to start with; it's not an easy thing to do, you have to basically transmute from random bytes (e.g., zeroed memory). If you want to have a garbage pointer that is not yet initialized, use <code>MaybeUninit</code>. If you want a null pointer, use <code>ptr::null</code> or <code>Option&lt;Unique&lt;_&gt;&gt;</code>. In exchange for following these best practices, you get two things:</p>
 <ul>
-<li><em>It is forwards compatible:</em> If we split out some unsizing and make them unsafe, we can merge them again later by expanding what is safe (and deprecating whatever parts of the &quot;unstable unsize cast&quot; machinery has become stabilized).</li>
-<li><em>Raw pointers retain the same safety invariant whether thin or wide:</em> Raw pointers have traditionally been permitted to be arbitrary values. UB arises only when an invalid pointer is <em>used</em> in some invalid way (e.g., dereferenced). Under the raw unsize model, this condition extends to the metadata. </li>
-<li><em>It is explicit:</em></li>
+<li>Safe unsafe code overall, since you are being clearer about your intentions.</li>
+<li>A simpler coercion model, with fewer traits and moving parts, and things that work the same for all kinds of pointers</li>
+<li>A language that is </li>
 </ul>
-<p>The second option has the following advantages:</p>
-<ul>
-<li><em>It retains a parallel between all kinds of unsized pointers:</em> Under this model, we can talk about &quot;fat pointers&quot; as having certain kinds of safety invariants (e.g. metadata meets certain conditions). </li>
-</ul>
-<p>There may be other benefits to the second option-- for example, </p>
 <h2 id="options"><a class="header" href="#options">Options</a></h2>
-<h3 id="sisufficientlyvalid-preferred-extend-the-safety-invariant-of-dyn-trait-to-require-a-sufficiently-valid-vtable"><a class="header" href="#sisufficientlyvalid-preferred-extend-the-safety-invariant-of-dyn-trait-to-require-a-sufficiently-valid-vtable">SISufficientlyValid: Preferred: Extend the safety invariant of <code>dyn Trait</code> to require a &quot;sufficiently valid&quot; vtable</a></h3>
-<p>Our preferred solution is to extend the safety invariant for raw pointers to require a &quot;sufficiently valid&quot; vtable. We don't specify the precise condition that makes a vtable &quot;sufficiently valid&quot; except to say that a fully valid vtable is &quot;sufficiently valid&quot;, and that a &quot;sufficiently valid&quot; vtable permits dyn upcasting without UB.</p>
-<p>Implications:</p>
-<ul>
-<li>The only way to meet the safety invariant for a <code>*const dyn Trait</code> is to use a valid vtable for <code>Trait</code>.
-<ul>
-<li>In particular, we don't define what is &quot;sufficiently valid&quot; so you have to use something that is fully valid; at the same time, you cannot rely on the vtable for <code>*const dyn Trait</code> being fully valid yourself, only &quot;sufficiently valid&quot; (which is &quot;valid enough for upcast&quot; and that's it).</li>
-</ul>
-</li>
-<li>If the pointer is not initialized, and hence you don't know which vtable to use, you have the following options:
-<ul>
-<li>Use a dummy vtable for any type, it doesn't matter which.</li>
-<li>Use <code>MaybeUninit&lt;*const dyn Foo&gt;</code>, in which case no safety invariant is assumed.</li>
-<li>Use <code>Option&lt;*const dyn Foo&gt;</code> and <code>None</code> instead of null: safer, wastes space.</li>
-<li>Use <code>Option&lt;NonNull&lt;dyn Foo&gt;&gt;</code> and <code>None</code> instead of null: safer, generally better, perhaps less ergonomic.</li>
-</ul>
-</li>
-</ul>
-<h2 id="other-options"><a class="header" href="#other-options">Other options</a></h2>
-<p>The following options were rejected. This section briefly explains why.</p>
+<p>The following options have been identified. The preferred solution is not yet clear.</p>
 <h3 id="rawunsafe-make-raw-pointer-upcasting-unsafe-not-possible-once-dyn-subtrait-unsizedyn-supertrait-is-stable"><a class="header" href="#rawunsafe-make-raw-pointer-upcasting-unsafe-not-possible-once-dyn-subtrait-unsizedyn-supertrait-is-stable">RawUnsafe: Make raw pointer upcasting unsafe (not possible once <code>dyn SubTrait: Unsize&lt;dyn SuperTrait&gt;</code> is stable)</a></h3>
 <p>We could permit &quot;safe pointer&quot; upcasting but make raw pointer upcasting unsafe. This would require changing the design of the coercion traits somewhat. We would introduce a new &quot;magic trait&quot; <code>RawUnsize</code>, analogous to <code>Unsize</code> except that it doesn't permit upcasting or any other operations that could require valid metadata. We would then modify the impl of <code>CoerceUnsized</code> for raw pointers to be:</p>
 <pre><pre class="playground"><code class="language-rust">
@@ -343,6 +323,58 @@ where
 <span class="boring">}
 </span></code></pre></pre>
 <p>So long as <code>Unsize</code> remains a strict superset of <code>RawUnsize</code>, we could change things in the future to make <code>RawUnsize</code> an alias for <code>Unsize</code> (or, if it is unstable, remove it altogether) and thus deprecate the <code>unsize_raw_pointer</code> function. This is therefore forwards compatible with the preferred proposal here as well as other things that say &quot;still possible in the future&quot;.</p>
+<h3 id="visufficientlyvalid-extend-the-validity-invariant-of-dyn-trait-to-require-a-sufficiently-valid-vtable"><a class="header" href="#visufficientlyvalid-extend-the-validity-invariant-of-dyn-trait-to-require-a-sufficiently-valid-vtable">VISufficientlyValid: Extend the validity invariant of <code>dyn Trait</code> to require a &quot;sufficiently valid&quot; vtable</a></h3>
+<p>One solution is to extend the <a href="#validity-versus-safety-invariants">validity invariant</a> for raw pointers to require a &quot;sufficiently valid&quot; vtable. We don't specify the precise condition that makes a vtable &quot;sufficiently valid&quot; except to say that a fully valid vtable is &quot;sufficiently valid&quot;, and that a &quot;sufficiently valid&quot; vtable permits dyn upcasting without UB.</p>
+<p>Implications:</p>
+<ul>
+<li>Whenever one creates a wide pointer, one must ensure that the metadata is &quot;sufficiently valid&quot;:
+<ul>
+<li>For <code>*const dyn Trait</code>, this would mean that one must use a valid vtable for <code>Trait</code>.
+<ul>
+<li>In particular, we don't define what is &quot;sufficiently valid&quot; so you have to use something that is fully valid; at the same time, you cannot rely on the vtable for <code>*const dyn Trait</code> being fully valid yourself, only &quot;sufficiently valid&quot; (which is &quot;valid enough for upcast&quot; and that's it).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>If the pointer is not initialized, and hence you don't know which vtable to use, you have the following options:
+<ul>
+<li>Use a dummy vtable for any type, it doesn't matter which.</li>
+<li>Use <code>MaybeUninit&lt;*const dyn Foo&gt;</code>, in which case no safety invariant is assumed.</li>
+<li>Use <code>Option&lt;*const dyn Foo&gt;</code> and <code>None</code> instead of null: safer, wastes space.</li>
+<li>Use <code>Option&lt;NonNull&lt;dyn Foo&gt;&gt;</code> and <code>None</code> instead of null: safer, generally better, perhaps less ergonomic.</li>
+</ul>
+</li>
+</ul>
+<p>One downside of this proposal is that the validity invariant is stricter than is needed: that is, the purpose of the validity invariant is primarily to enable the compiler's ability to perform layout optimizations. This rule would enable the compiler to silently insert upcasting operations if it needed to do so, but it's not clear why it would need to do that spontaneously: those operations are always tied to something else (e.g., a coercion or a method call). Therefore, the safety invariant might seem like a better fit.</p>
+<h3 id="sisufficientlyvalid-extend-the-safety-invariant-of-dyn-trait-to-require-a-sufficiently-valid-vtable"><a class="header" href="#sisufficientlyvalid-extend-the-safety-invariant-of-dyn-trait-to-require-a-sufficiently-valid-vtable">SISufficientlyValid: Extend the safety invariant of <code>dyn Trait</code> to require a &quot;sufficiently valid&quot; vtable</a></h3>
+<p>As an alternative to modifying the validity invariant, we could modify the <a href="#validity-versus-safety-invariants">safety invariant</a> for wide pointers to include &quot;sufficiently valid&quot; metadata (see VISufficientlyValid for details). </p>
+<p>Implications:</p>
+<ul>
+<li>Whenever one performs an upcast or other operation with a wide pointer, one must ensure that the metadata is &quot;sufficiently valid&quot;:</li>
+<li>If the pointer is not initialized, and hence you don't know which vtable to use, you have the same options as described under VISufficientlyValid.</li>
+</ul>
+<p>The primary downsice of this proposal versus VISufficientlyValid is that the causes of UB are rather more subtle. Instead of UB occurring when the pointer is created, it occurs when an upcast occurs, and the locations for upcasts can be implicit (eg., any assignment or function call). Consider the following example:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn noop(x: *mut dyn SuperTrait) { 
+    /* look ma, empty body */
+}
+
+fn creator() {
+    // No UB yet: the metadata for `x` is not sufficiently valid,
+    // but we haven't done anything with it yet.
+    let x: *mut dyn SubTrait = unsafe { std::mem::zeroed() };
+
+    // `y = x` does not trigger UB, just a copy.
+    let y = x;
+
+    // UB! Here there is a coercion.
+    noop(y);
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>For this reason, it would probably be &quot;best practice&quot; to treat this condition &quot;as if&quot; it were part of the validity invariant.</p>
 <h3 id="sifullyvalid-extend-safety-condition-to-require-a-fully-valid-vtable-still-possible-in-the-future"><a class="header" href="#sifullyvalid-extend-safety-condition-to-require-a-fully-valid-vtable-still-possible-in-the-future">SIFullyValid: Extend safety condition to require a &quot;fully valid&quot; vtable (still possible in the future)</a></h3>
 <p>This would permit safe code to read values from the vtable of a <code>*const dyn Trait</code> without any unsafety (just as it does for upcasting). It's not clear why we would want to permit this, and it may foreclose useful options in the future.</p>
 <p>Adopting this option remains a possibility in the future, as it would be a backwards compatible extension to the above rule.</p>
