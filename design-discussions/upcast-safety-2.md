@@ -127,40 +127,26 @@ The core decision to be made is to choose between two paths:
 * Splitting out "unsafe" unsizing operations from safe ones;
     * Unsizing operations on safe pointers like `&dyn SubTrait` would continue to work as they do today.
     * Implicit unsizing operations on raw pointers like `*const dyn SubTrait` would work sometimes, but those unsizing operations that require the metadata meet some sort of condition would require an explicit function call (e.g. the proposal below adds an unsafe function `unsize_raw_pointer`).
-* Raw pointers have a safety invariant that puts conditions on metadata 
-    * There are degrees in terms of how strict those conditions can be,
+* Raw pointers have a validity or safety invariant that puts conditions on metadata 
+    * There are options in terms of when this invariant must hold and how strict the invariant must be, but the upshot is that whenever you synthesize the metadata for a raw, wide pointer (e.g., from a transmute), you need to ensure that this metadata comes from some valid source, and is not just garbage. This is contrast to the data pointer, which can generally be arbitrary bytes (though not unininitialized).
 
-The first option has the following advantages:
+### Why prefer unsafe raw pointer upcasting?
 
-* *It is forwards compatible:* If we split out some unsizing and make them unsafe, we can merge them again later by expanding what is safe (and deprecating whatever parts of the "unstable unsize cast" machinery has become stabilized).
-* *Raw pointers retain the same safety invariant whether thin or wide:* Raw pointers have traditionally been permitted to be arbitrary values. UB arises only when an invalid pointer is *used* in some invalid way (e.g., dereferenced). Under the raw unsize model, this condition extends to the metadata. 
-* *It is explicit:*
+Raw pointers have traditionally been viewed as "untrusted data until they are used". This is why dereferencing a raw pointer is unsafe: that's the point where it must be valid. It makes sense to extend this model to the metadata as well. When working with raw pointers and unsafe code, implicit operations like upcasting are a bug, not a feature, so it's useful to segregate them out and make them explicit via some kind of function call. It does require adding a new trait (see below) to the unsizing mechanism, but it only requires an internal "implementation" trait, and doesn't affect the "main trait" (`CoerceUnsized`).
 
-The second option has the following advantages:
+Besides, so long as the validity/safety invariants remain in flux (which they will be for a while yet), this choice is forwards compatible with the others. We have the option to remove the "unsafe upcast" and merge it with safe upcast and strengthen the relevant invariant(s).
 
-* *It retains a parallel between all kinds of unsized pointers:* Under this model, we can talk about "fat pointers" as having certain kinds of safety invariants (e.g. metadata meets certain conditions). 
+### Why prefer unsafe some form of invariant?
 
-There may be other benefits to the second option-- for example, 
+It's not clear why one would ever have invalid metadata in a wide pointer to start with; it's not an easy thing to do, you have to basically transmute from random bytes (e.g., zeroed memory). If you want to have a garbage pointer that is not yet initialized, use `MaybeUninit`. If you want a null pointer, use `ptr::null` or `Option<Unique<_>>`. In exchange for following these best practices, you get two things:
+
+* Safe unsafe code overall, since you are being clearer about your intentions.
+* A simpler coercion model, with fewer traits and moving parts, and things that work the same for all kinds of pointers
+* A language that is 
 
 ## Options
 
-### SISufficientlyValid: Preferred: Extend the safety invariant of `dyn Trait` to require a "sufficiently valid" vtable
-
-Our preferred solution is to extend the safety invariant for raw pointers to require a "sufficiently valid" vtable. We don't specify the precise condition that makes a vtable "sufficiently valid" except to say that a fully valid vtable is "sufficiently valid", and that a "sufficiently valid" vtable permits dyn upcasting without UB.
-
-Implications:
-
-* The only way to meet the safety invariant for a `*const dyn Trait` is to use a valid vtable for `Trait`.
-    * In particular, we don't define what is "sufficiently valid" so you have to use something that is fully valid; at the same time, you cannot rely on the vtable for `*const dyn Trait` being fully valid yourself, only "sufficiently valid" (which is "valid enough for upcast" and that's it).
-* If the pointer is not initialized, and hence you don't know which vtable to use, you have the following options:
-    * Use a dummy vtable for any type, it doesn't matter which.
-    * Use `MaybeUninit<*const dyn Foo>`, in which case no safety invariant is assumed.
-    * Use `Option<*const dyn Foo>` and `None` instead of null: safer, wastes space.
-    * Use `Option<NonNull<dyn Foo>>` and `None` instead of null: safer, generally better, perhaps less ergonomic.
-
-## Other options
-
-The following options were rejected. This section briefly explains why.
+The following options have been identified. The preferred solution is not yet clear.
 
 ### RawUnsafe: Make raw pointer upcasting unsafe (not possible once `dyn SubTrait: Unsize<dyn SuperTrait>` is stable)
 
@@ -195,6 +181,54 @@ where
 ```
 
 So long as `Unsize` remains a strict superset of `RawUnsize`, we could change things in the future to make `RawUnsize` an alias for `Unsize` (or, if it is unstable, remove it altogether) and thus deprecate the `unsize_raw_pointer` function. This is therefore forwards compatible with the preferred proposal here as well as other things that say "still possible in the future".
+### VISufficientlyValid: Extend the validity invariant of `dyn Trait` to require a "sufficiently valid" vtable
+
+One solution is to extend the [validity invariant][vvsi] for raw pointers to require a "sufficiently valid" vtable. We don't specify the precise condition that makes a vtable "sufficiently valid" except to say that a fully valid vtable is "sufficiently valid", and that a "sufficiently valid" vtable permits dyn upcasting without UB.
+
+Implications:
+
+* Whenever one creates a wide pointer, one must ensure that the metadata is "sufficiently valid":
+    * For `*const dyn Trait`, this would mean that one must use a valid vtable for `Trait`.
+        * In particular, we don't define what is "sufficiently valid" so you have to use something that is fully valid; at the same time, you cannot rely on the vtable for `*const dyn Trait` being fully valid yourself, only "sufficiently valid" (which is "valid enough for upcast" and that's it).
+* If the pointer is not initialized, and hence you don't know which vtable to use, you have the following options:
+    * Use a dummy vtable for any type, it doesn't matter which.
+    * Use `MaybeUninit<*const dyn Foo>`, in which case no safety invariant is assumed.
+    * Use `Option<*const dyn Foo>` and `None` instead of null: safer, wastes space.
+    * Use `Option<NonNull<dyn Foo>>` and `None` instead of null: safer, generally better, perhaps less ergonomic.
+
+One downside of this proposal is that the validity invariant is stricter than is needed: that is, the purpose of the validity invariant is primarily to enable the compiler's ability to perform layout optimizations. This rule would enable the compiler to silently insert upcasting operations if it needed to do so, but it's not clear why it would need to do that spontaneously: those operations are always tied to something else (e.g., a coercion or a method call). Therefore, the safety invariant might seem like a better fit.
+
+### SISufficientlyValid: Extend the safety invariant of `dyn Trait` to require a "sufficiently valid" vtable
+
+As an alternative to modifying the validity invariant, we could modify the [safety invariant][vvsi] for wide pointers to include "sufficiently valid" metadata (see VISufficientlyValid for details). 
+
+
+Implications:
+
+* Whenever one performs an upcast or other operation with a wide pointer, one must ensure that the metadata is "sufficiently valid":
+* If the pointer is not initialized, and hence you don't know which vtable to use, you have the same options as described under VISufficientlyValid.
+
+The primary downsice of this proposal versus VISufficientlyValid is that the causes of UB are rather more subtle. Instead of UB occurring when the pointer is created, it occurs when an upcast occurs, and the locations for upcasts can be implicit (eg., any assignment or function call). Consider the following example:
+
+```rust
+fn noop(x: *mut dyn SuperTrait) { 
+    /* look ma, empty body */
+}
+
+fn creator() {
+    // No UB yet: the metadata for `x` is not sufficiently valid,
+    // but we haven't done anything with it yet.
+    let x: *mut dyn SubTrait = unsafe { std::mem::zeroed() };
+
+    // `y = x` does not trigger UB, just a copy.
+    let y = x;
+
+    // UB! Here there is a coercion.
+    noop(y);
+}
+```
+
+For this reason, it would probably be "best practice" to treat this condition "as if" it were part of the validity invariant.
 
 ### SIFullyValid: Extend safety condition to require a "fully valid" vtable (still possible in the future)
 
