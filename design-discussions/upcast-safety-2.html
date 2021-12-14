@@ -220,7 +220,7 @@ where
 <h3 id="how-upcasting-coercions-adjust-the-vtable"><a class="header" href="#how-upcasting-coercions-adjust-the-vtable">How upcasting coercions adjust the vtable</a></h3>
 <p>The vtable for a <code>dyn SubTrait</code> <a href="https://rust-lang.github.io/dyn-upcasting-coercion-initiative/design-discussions/vtable-layout.html">now embeds pointers</a> to the vtables for super traits. Upcasting therefore requires loading the new vtable for the supertrait from the specific slot within the subtrait's table.</p>
 <p>There are alternatives we could use such that upcasting would be a pure integer adjustment with no load, but that would be less efficient in terms of space usage.</p>
-<p>(Although not directly relevant here, there is another option that requires accessing the vtable from safe code, which is finding the offset of fields. This is because the alignment of a <code>*const dyn Foo</code> depends on the hidden type and hence we must load the alignment from the vtable and do offsetting adjustments at runtime.)</p>
+<p>Although not directly relevant here, there is another operation that requires accessing the vtable, which is finding the offset of fields -- see <a href="#mfo">the discussion in the appendices</a> for details. This operation is however only permitted in unsafe code because it requires a dereference of the raw pointer.</p>
 <h3 id="ergo-upcasting-raw-pointers-is-possible-in-safe-code"><a class="header" href="#ergo-upcasting-raw-pointers-is-possible-in-safe-code">Ergo, upcasting raw pointers is possible in safe code</a></h3>
 <p>Without any further changes, the following upcasting is legal in safe Rust (<a href="https://play.rust-lang.org/?version=nightly&amp;mode=debug&amp;edition=2021&amp;gist=37e49f69ebf992856b07a430c4d5510f">playground</a>):</p>
 <pre><pre class="playground"><code class="language-rust">
@@ -262,8 +262,34 @@ fn convert(x: *const dyn Sub) -&gt; *const dyn Sup {
 <li><code>transmute</code> is unsafe, but it would indeed be a requirement that users of transmute must uphold</li>
 <li><code>null</code>, if extended to unsized types, would be tricky -- we would need to have some way to get a &quot;dummy&quot; vtable that is structurally sound enough to permit upcasting, but which has (for example) null pointers for the actual methods. This is, however, eminently doable.</li>
 </ul>
+<h2 id="core-decision-to-be-made"><a class="header" href="#core-decision-to-be-made">Core decision to be made</a></h2>
+<p>The core decision to be made is to choose between two paths:</p>
+<ul>
+<li>Splitting out &quot;unsafe&quot; unsizing operations from safe ones;
+<ul>
+<li>Unsizing operations on safe pointers like <code>&amp;dyn SubTrait</code> would continue to work as they do today.</li>
+<li>Implicit unsizing operations on raw pointers like <code>*const dyn SubTrait</code> would work sometimes, but those unsizing operations that require the metadata meet some sort of condition would require an explicit function call (e.g. the proposal below adds an unsafe function <code>unsize_raw_pointer</code>).</li>
+</ul>
+</li>
+<li>Raw pointers have a safety invariant that puts conditions on metadata 
+<ul>
+<li>There are degrees in terms of how strict those conditions can be,</li>
+</ul>
+</li>
+</ul>
+<p>The first option has the following advantages:</p>
+<ul>
+<li><em>It is forwards compatible:</em> If we split out some unsizing and make them unsafe, we can merge them again later by expanding what is safe (and deprecating whatever parts of the &quot;unstable unsize cast&quot; machinery has become stabilized).</li>
+<li><em>Raw pointers retain the same safety invariant whether thin or wide:</em> Raw pointers have traditionally been permitted to be arbitrary values. UB arises only when an invalid pointer is <em>used</em> in some invalid way (e.g., dereferenced). Under the raw unsize model, this condition extends to the metadata. </li>
+<li><em>It is explicit:</em></li>
+</ul>
+<p>The second option has the following advantages:</p>
+<ul>
+<li><em>It retains a parallel between all kinds of unsized pointers:</em> Under this model, we can talk about &quot;fat pointers&quot; as having certain kinds of safety invariants (e.g. metadata meets certain conditions). </li>
+</ul>
+<p>There may be other benefits to the second option-- for example, </p>
 <h2 id="options"><a class="header" href="#options">Options</a></h2>
-<h3 id="preferred-extend-the-safety-invariant-of-dyn-trait-to-require-a-sufficiently-valid-vtable"><a class="header" href="#preferred-extend-the-safety-invariant-of-dyn-trait-to-require-a-sufficiently-valid-vtable">Preferred: Extend the safety invariant of <code>dyn Trait</code> to require a &quot;sufficiently valid&quot; vtable</a></h3>
+<h3 id="sisufficientlyvalid-preferred-extend-the-safety-invariant-of-dyn-trait-to-require-a-sufficiently-valid-vtable"><a class="header" href="#sisufficientlyvalid-preferred-extend-the-safety-invariant-of-dyn-trait-to-require-a-sufficiently-valid-vtable">SISufficientlyValid: Preferred: Extend the safety invariant of <code>dyn Trait</code> to require a &quot;sufficiently valid&quot; vtable</a></h3>
 <p>Our preferred solution is to extend the safety invariant for raw pointers to require a &quot;sufficiently valid&quot; vtable. We don't specify the precise condition that makes a vtable &quot;sufficiently valid&quot; except to say that a fully valid vtable is &quot;sufficiently valid&quot;, and that a &quot;sufficiently valid&quot; vtable permits dyn upcasting without UB.</p>
 <p>Implications:</p>
 <ul>
@@ -283,10 +309,44 @@ fn convert(x: *const dyn Sub) -&gt; *const dyn Sup {
 </ul>
 <h2 id="other-options"><a class="header" href="#other-options">Other options</a></h2>
 <p>The following options were rejected. This section briefly explains why.</p>
-<h3 id="extend-safety-condition-to-require-a-fully-valid-vtable-still-possible-in-the-future"><a class="header" href="#extend-safety-condition-to-require-a-fully-valid-vtable-still-possible-in-the-future">Extend safety condition to require a &quot;fully valid&quot; vtable (still possible in the future)</a></h3>
+<h3 id="rawunsafe-make-raw-pointer-upcasting-unsafe-not-possible-once-dyn-subtrait-unsizedyn-supertrait-is-stable"><a class="header" href="#rawunsafe-make-raw-pointer-upcasting-unsafe-not-possible-once-dyn-subtrait-unsizedyn-supertrait-is-stable">RawUnsafe: Make raw pointer upcasting unsafe (not possible once <code>dyn SubTrait: Unsize&lt;dyn SuperTrait&gt;</code> is stable)</a></h3>
+<p>We could permit &quot;safe pointer&quot; upcasting but make raw pointer upcasting unsafe. This would require changing the design of the coercion traits somewhat. We would introduce a new &quot;magic trait&quot; <code>RawUnsize</code>, analogous to <code>Unsize</code> except that it doesn't permit upcasting or any other operations that could require valid metadata. We would then modify the impl of <code>CoerceUnsized</code> for raw pointers to be:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;T, U&gt; CoerceUnsized&lt;*const U&gt; for *const T where
+    T: Unsize&lt;U&gt; + ?Sized,
+    U: ?Sized, 
+<span class="boring">}
+</span></code></pre></pre>
+<p>and it would become</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;T, U&gt; CoerceUnsized&lt;*const U&gt; for *const T where
+    T: RawUnsize&lt;U&gt; + ?Sized,
+    U: ?Sized, 
+<span class="boring">}
+</span></code></pre></pre>
+<p>To support upcasting on raw pointers, we can then introduce some other intrinsic for doing raw pointer upcast, such as something like this (modulo stacked borrows, which this <em>particular</em> definition may invalidate):</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Unsafefy condition: If the metadata for `T` must be valid.
+pub unsafe fn unsize_raw_pointer&lt;T, U&gt;(t: *const T) -&gt; *const U
+where
+    T: Unsize&lt;U&gt;,
+{
+    let (_, t_metadata) = t.into_raw_parts();
+    unsafe { &amp;*t }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>So long as <code>Unsize</code> remains a strict superset of <code>RawUnsize</code>, we could change things in the future to make <code>RawUnsize</code> an alias for <code>Unsize</code> (or, if it is unstable, remove it altogether) and thus deprecate the <code>unsize_raw_pointer</code> function. This is therefore forwards compatible with the preferred proposal here as well as other things that say &quot;still possible in the future&quot;.</p>
+<h3 id="sifullyvalid-extend-safety-condition-to-require-a-fully-valid-vtable-still-possible-in-the-future"><a class="header" href="#sifullyvalid-extend-safety-condition-to-require-a-fully-valid-vtable-still-possible-in-the-future">SIFullyValid: Extend safety condition to require a &quot;fully valid&quot; vtable (still possible in the future)</a></h3>
 <p>This would permit safe code to read values from the vtable of a <code>*const dyn Trait</code> without any unsafety (just as it does for upcasting). It's not clear why we would want to permit this, and it may foreclose useful options in the future.</p>
 <p>Adopting this option remains a possibility in the future, as it would be a backwards compatible extension to the above rule.</p>
-<h3 id="extend-safety-condition-to-require-a-structurally-valid-vtable-still-possible-in-the-future"><a class="header" href="#extend-safety-condition-to-require-a-structurally-valid-vtable-still-possible-in-the-future">Extend safety condition to require a &quot;structurally valid&quot; vtable (still possible in the future)</a></h3>
+<h3 id="sistructvalid-extend-safety-condition-to-require-a-structurally-valid-vtable-still-possible-in-the-future"><a class="header" href="#sistructvalid-extend-safety-condition-to-require-a-structurally-valid-vtable-still-possible-in-the-future">SIStructValid: Extend safety condition to require a &quot;structurally valid&quot; vtable (still possible in the future)</a></h3>
 <p>Instead of requiring a valid vtable, we could require a &quot;structurally valid&quot; vtable. This vtable would have null pointers for all methods as well as a dummy type-id but would have the same &quot;structure&quot; as an ordinary vtable. There would be an intrinsic that gives access to the vtable:</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
@@ -296,11 +356,9 @@ fn convert(x: *const dyn Sub) -&gt; *const dyn Sup {
 </span></code></pre></pre>
 <p>This would permit one to represent an uninitialized dyn pointer as <code>*const dyn Foo</code> and use the dummy-vtable for its metadata. This could be convenient, but is less typesafe than <code>MaybeUnit</code> or <code>Option&lt;NonNull&gt;</code> and not obviously better.</p>
 <p>Adopting this option remains a possibility in the future, as it would be a backwards compatible extension to the above rule.</p>
-<h3 id="special-case-the-vtable-for-null-still-possible-in-the-future"><a class="header" href="#special-case-the-vtable-for-null-still-possible-in-the-future">Special case the vtable for null (still possible in the future)</a></h3>
+<h3 id="nullvtable-special-case-the-vtable-for-null-still-possible-in-the-future"><a class="header" href="#nullvtable-special-case-the-vtable-for-null-still-possible-in-the-future">NullVtable: Special case the vtable for null (still possible in the future)</a></h3>
 <p>Instead of saying that a &quot;null dyn pointer&quot; must have a structurally sound vtable, we could permit null as the value for the vtable. This would require an &quot;if branch&quot; or some kind of more complex logic in the upcasting path, since we couldn't unconditionally do a load. That might be acceptable, but it seems silly to slow down the upcasting path for a relatively unusual case of having a null </p>
-<h3 id="make-raw-pointer-upcasting-unsafe-not-possible-once-dyn-subtrait-unsizedyn-supertrait-is-stable"><a class="header" href="#make-raw-pointer-upcasting-unsafe-not-possible-once-dyn-subtrait-unsizedyn-supertrait-is-stable">Make raw pointer upcasting unsafe (not possible once <code>dyn SubTrait: Unsize&lt;dyn SuperTrait&gt;</code> is stable)</a></h3>
-<p>Raw pointer unsizing coercions are currently stable and legal in safe code, as demonstrated above, so we cannot simply make all such coercions illegal. What we could do is have a distinct <em>set</em> of coercions, perhaps a <code>T: UnsafeUnsize</code>, such as that coercion is legal if <code>T: UnsafeUnsize</code> is implemented and we are in an unsafe block. This complicates the coercion mechanism which is already fairly complex.</p>
-<h3 id="adjust-vtable-layout-to-not-require-a-load-still-possible-in-the-future"><a class="header" href="#adjust-vtable-layout-to-not-require-a-load-still-possible-in-the-future">Adjust vtable layout to not require a load (still possible in the future)</a></h3>
+<h3 id="flatvtable-adjust-vtable-layout-to-not-require-a-load-still-possible-in-the-future"><a class="header" href="#flatvtable-adjust-vtable-layout-to-not-require-a-load-still-possible-in-the-future">FlatVtable: Adjust vtable layout to not require a load (still possible in the future)</a></h3>
 <p>We could adjust the vtable layout for a subtrait to include embedded copies of all supertraits. This way the upcast is a pure offset operation and does not require a load. This would be less efficient in terms of space usage. We generally prefer not to limit the possible vtable designs that an implementation can use unless we have to, so as to leave room for future developments.</p>
 <h2 id="appendices"><a class="header" href="#appendices">Appendices</a></h2>
 <h3 id="validity-versus-safety-invariants"><a class="header" href="#validity-versus-safety-invariants">Validity versus safety invariants</a></h3>
@@ -317,6 +375,38 @@ fn convert(x: *const dyn Sub) -&gt; *const dyn Sup {
 </ul>
 </li>
 </ul>
+<h3 id="metadata-and-field-offsets"><a class="header" href="#metadata-and-field-offsets">Metadata and field offsets</a></h3>
+<p>Consider these struct definitions:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>struct RefCounted&lt;T&gt; {
+    counter: usize,
+    data: T,
+}
+
+struct Foo&lt;U&gt; {
+    field: u32,
+    data: U
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>and now assume that I have a <code>*const RefCounted&lt;Foo&lt;u32&gt;&gt;</code> which is coerced:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let pointer1: *const RefCounted&lt;Foo&lt;u32&gt;&gt; = ...;
+let pointer2: *const RefCounted&lt;Foo&lt;dyn Debug&gt;&gt; = pointer1;
+<span class="boring">}
+</span></code></pre></pre>
+<p>If I now try to get the address of the field <code>field</code>...</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let pointer3: *const u32 = unsafe { raw_addr!((*pointer2).data.field) };
+<span class="boring">}
+</span></code></pre></pre>
+<p>...this operation requires valid metadata. This is because the offset of <code>field</code> is a function of the alignment of <code>Foo&lt;U&gt;</code>, which is a function of the alignment of <code>U</code>. In these cases, the compiler will load the alignment from the vtable and do the required address computations itself.</p>
 
                     </main>
 
