@@ -1,0 +1,315 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Upcast safety - Dyn upcast initiative</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item "><a href="../index.html">👋 Welcome</a></li><li class="chapter-item "><a href="../updates.html">✏️ Updates</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../updates/2021-oct.html">2021-Oct</a></li></ol></li><li class="chapter-item "><a href="../CHARTER.html">📜 Charter</a></li><li class="chapter-item "><a href="../explainer.html">📚 Explainer</a></li><li class="chapter-item expanded "><a href="../design-discussions/index.html">💬 Design discussions</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../design-discussions/definition.html">Definition</a></li><li class="chapter-item expanded "><a href="../design-discussions/upcast-safety-3.html" class="active">Upcast safety</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../design-discussions/upcast-safety-3-options.html">Detailed options</a></li><li class="chapter-item "><a href="../design-discussions/upcast-safety-2.html">Older draft 2</a></li><li class="chapter-item "><a href="../design-discussions/upcast-safety.html">Older draft 1</a></li></ol></li><li class="chapter-item "><a href="../design-discussions/vtable-layout.html">Vtable layout and runtime behavior</a></li></ol></li><li class="chapter-item "><a href="../FAQ.html">😕 FAQ</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Dyn upcast initiative</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/dyn-upcasting-coercion-initiative" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/dyn-upcasting-coercion-initiative/edit/master/./design-discussions/upcast-safety-3.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="dyn-upcast-safety"><a class="header" href="#dyn-upcast-safety">Dyn upcast safety</a></h1>
+<p>This document proposes a resolution to the last outstanding question blocking <code>dyn</code> upcast.</p>
+<h2 id="background"><a class="header" href="#background">Background</a></h2>
+<p>We are trying to enable &quot;upcasts&quot; from a <code>dyn Trait</code> to its supertraits:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>trait Foo {
+    fn foo_method(&amp;self);
+}
+trait Bar: Foo {
+    fn bar_method(&amp;self);
+}
+
+let x: &amp;dyn Bar = /* ... */;
+let y: &amp;dyn Foo = x; // compiles
+<span class="boring">}
+</span></code></pre></pre>
+<p>The key factor for these upcasts is that they require adjusting the vtable. The current implementation strategy is that the vtables for the <code>Bar</code> trait embed pointers to a <code>Foo</code> vtable within them:</p>
+<pre><code>+----------------------------+
+| Bar vtable for some type T |
+|----------------------------|
+| Foo vtable                 | ----------&gt; +------------------+
+| foo_method                 | -----+      | Foo vtable for T |
+| bar_method                 | --+  |      |------------------|
++----------------------------+   |  |      | foo_method       | ---+
+                                 |  |      +------------------+    |
+                                 |  |                              |
+                                 |  +---&gt; &lt;T as Foo&gt;::foo_method &lt;-+
+                                 v
+                     &lt;T as Bar&gt;::bar_method
+                 
+(this diagram is only meant to convey the general idea of the vtable
+ layout, and doesn't represent the exact offsets we would use etc;
+ in fact, with the current implementation,
+ the first supertrait is stored 'inline' and hence no load is required)
+</code></pre>
+<p>This way, given a <code>&amp;dyn Bar</code> object, we convert its <code>Bar</code> vtable to the appropriate <code>Foo</code> vtable by loading the appropriate field.</p>
+<p>Although we don't want to commit to a particular implementation strategy, we do want to leave room for this strategy. One implication is that performing an upcast may require loading from the vtable, which implies that the vtable must be a valid pointer to an actual Rust vtable. Although <code>&amp;dyn Bar</code> references would always contain a valid vtable, the same is not necessarily true for a raw pointer like <code>*const dyn Bar</code> or <code>*mut dyn Bar</code>. </p>
+<p>In the language today, we only support &quot;noop upcasts&quot; that don't affect the vtable, and these are safe (e.g., converting from <code>*const dyn Foo + Send</code> to <code>*const dyn Foo</code>). If we extend the set of upcasts to permit vtable-adjusting upcasts, like <code>*const dyn Bar</code> to <code>*const dyn Foo</code>, this implies that, for safe code at least, all <code>*const dyn Trait</code> values must have a valid vtable, so that we know we can safely load the required field and perform the upcast.</p>
+<p>On the other hand, we do not generally require raw <code>*mut T</code> pointers to point to valid data. In fact, we explicitly permit them to have any value, including null, and only require that they point to valid data when they are dereferenced. Because dereferencing a raw pointer is an unsafe operation, it has always been considered safe to expose an arbitrary raw pointer to unsafe code -- the unsafety arises when you take a raw pointer from an unknown source and dereference it, since unless you can trace the origin of that pointer you can't possible guarantee that it is valid to dereference.</p>
+<p>This brings us to the conflict:</p>
+<ul>
+<li>It has historically been safe to &quot;release&quot; a raw pointer to safe code, but not safe to receive one (since you cannot know if it is valid).</li>
+<li>It has historically been safe to upcast <code>*const dyn</code> values (e.g., <code>*const dyn Foo + Send</code> to <code>*const dyn Foo</code>). 
+<ul>
+<li>Unlike the upcasts we are considering now, this upcast does not require changing the vtable at runtime, but the distinction is subtle for end-users.</li>
+<li>Moreover, there are future extensions (e.g., upcasting <code>*const dyn Foo + Bar</code> to <code>*const dyn Foo</code>) that would require adjusting the vtable much like the upcasts currently being stabilized. </li>
+</ul>
+</li>
+</ul>
+<h2 id="related-future-consideration-virtual-method-calls-on-raw-pointers"><a class="header" href="#related-future-consideration-virtual-method-calls-on-raw-pointers">Related future consideration: virtual method calls on raw pointers</a></h2>
+<p>There have been requests to extend traits with the option to include raw pointer methods:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>trait PtrLike {
+    fn is_null(v: *const Self) -&gt; bool;
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>These methods would be useful when writing unsafe code because having an <code>&amp;self</code> method requires satisfying the validity conditions of an <code>&amp;</code>-reference, which may not be possible. If we did have such methods, however, it raises the question of whether it would be safe to invoke <code>is_null</code> on a <code>*const dyn PtrLike</code> reference. Just as with upcasting, invoking a method from the vtable requires loading from the vtable, and hence requires a valid vtable generated by the compiler.</p>
+<p>The solution we propose in this document also resolves this future dilemma.</p>
+<h2 id="definitions-validity-vs-safety-invariant"><a class="header" href="#definitions-validity-vs-safety-invariant">Definitions: validity vs safety invariant</a></h2>
+<p>We adopt the terms <em>validity</em> and <em>safety</em> invariant from the <a href="https://rust-lang.github.io/unsafe-code-guidelines/glossary.html">unsafe code guidelines</a>:</p>
+<blockquote>
+<p>The <em>validity invariant</em> is an invariant that all data must uphold any time it is accessed or copied in a typed manner. This invariant is known to the compiler and exploited by optimizations such as improved enum layout or eliding in-bounds checks.</p>
+<p>The <em>safety invariant</em> is an invariant that safe code may assume all data to uphold. This invariant is used to justify which operations safe code can perform. The safety invariant can be temporarily violated by unsafe code, but must always be upheld when interfacing with unknown safe code. It is not relevant when arguing whether some program has UB, but it is relevant when arguing whether some code safely encapsulates its unsafety -- in other words, it is relevant when arguing whether some library is sound.</p>
+</blockquote>
+<p>In short, the <em>validity invariant</em> defines a condition that must always be true, even in unsafe code, and the <em>safety invariant</em> defines an invariant that unsafe code must guarantee before a value can be released to be used by arbitrary code.</p>
+<h2 id="contours-of-the-solution-space"><a class="header" href="#contours-of-the-solution-space">Contours of the solution space</a></h2>
+<p>We can fix this conflict in one of two basic ways:</p>
+<p>First, <strong>we could make vtable-adjusting upcasts casts (and <code>*Self</code> method calls) unsafe</strong>. This is  difficult to implement and would require changes to the <code>Coerce</code> trait, which is already excessively complicated. In exchange, it offers at best marginal benefit: raw <code>*dyn</code> pointers can be released to safe code, but safe code can't do anything interesting with them. For this reason, we do not recommend this option.</p>
+<p>If vtable-adjusting casts (and <code>*Self</code> method calls) are safe, then the <strong>safety invariant</strong> for <code>*dyn</code> types must be that their metadata points to a <strong>fully valid vtable</strong> (i.e., a vtable created by the compiler). This ensures safe code can perform upcasts or dynamic dispatch. This also implies that <code>std::ptr::null</code> (which is safe) cannot be extended to <code>T</code> where <code>T: ?Sized</code> unless further changes are made, since we would need to provide a valid vtable (it would be possible to permit a sentinel value, like null, to be used, but that would imply that upcasting must have a branch, making it less efficient).</p>
+<p>There are, however, various options for the <strong>validity invariant</strong>, ranging from no invariant to requiring a fully valid vtable at all times. The strict invariants offer some benefits, such as the ability to have a niche for <code>*dyn</code> pointers. We survey the options here:</p>
+<div class="table-wrapper"><table><thead><tr><th>Validity invariant for <code>*dyn</code> metadata</th><th>Supports niche</th><th>Can be initialized with <code>std::mem::zeroed</code></th><th>Constant initializer</th></tr></thead><tbody>
+<tr><td>None</td><td></td><td>✅</td><td>✅</td></tr>
+<tr><td>Word-aligned</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>Word-aligned, non-null</td><td>✅</td><td></td><td>✅</td></tr>
+<tr><td>Valid vtable</td><td>✅</td><td></td><td></td></tr>
+</tbody></table>
+</div>
+<p>Explanations for the column titles:</p>
+<ul>
+<li>Validity invariant for <code>*dyn</code> metadata -- describes the invariant that applies to the metadata for a <code>*dyn</code> value.</li>
+<li>Supports niche -- true if there is a niche value so that <code>sizeof(Option&lt;*const dyn Foo&gt;) == sizeof(*const dyn Foo)</code>.</li>
+<li>Can be initialized with <code>std::mem::zeroed</code> -- true if <code>std::mem::zeroed</code> can be used to create a valid value (very convenient). This makes it trivial to innitialize a <code>*const dyn</code> with a dummy value, though the value cannot be released to safe code.</li>
+<li>Constant initializer -- true if there is some constant value for <code>*const dyn Foo</code> that satisfies the validity invariant, no matter the trait <code>Foo</code>. This makes it easy to initialize a <code>*const dyn</code> with a dummy value, though the value cannot be released to safe code.</li>
+</ul>
+<p>Other points:</p>
+<ul>
+<li><code>*dyn</code> values <a href="https://play.rust-lang.org/?version=nightly&amp;mode=debug&amp;edition=2021&amp;gist=bcd18cd3870ba98e2c59b527418f8f68">currently have a niche</a>.</li>
+<li>Other pointer-like values (such as <code>fn</code> and <code>&amp;</code>-references) are expected to have a validity invariant of word-aligned, non-null.</li>
+<li>Whichever option we use, we can backwards-compatibly move &quot;up the table&quot; and adopt a less-strict validity invariant without introducing UB into any extant programs.</li>
+</ul>
+<h2 id="proposal"><a class="header" href="#proposal">Proposal</a></h2>
+<p>The proposal is as follows:</p>
+<ul>
+<li>Vtable-adjusting upcasts are <strong>safe operations</strong>. The upcast is UB if performed on a value without a valid vtable</li>
+<li>As such, the &quot;safety invariant&quot; requires a <strong>fully valid vtable</strong>.</li>
+<li>The &quot;validity invariant&quot; requires <code>*dyn</code> metadata to be <strong>word-aligned and non-null</strong>.</li>
+</ul>
+<p>Vtable-adjusting upcasts are defined as:</p>
+<ul>
+<li>Trait upcasts that alter the set of methods that can be invoked on the resulting value at runtime (e.g., <code>dyn Bar</code> to <code>dyn Foo</code> from the introduction). In particular, upcasts that simply add or remove auto-traits are not vtable-adjusting (e.g., <code>dyn Debug + Send</code> to <code>dyn Debug</code>).</li>
+</ul>
+<p>This approach...</p>
+<ul>
+<li>permits safe upcasting (and method calls, in the future);</li>
+<li>preserves the existing niche for <code>*const dyn</code>;</li>
+<li>is consistent with other validity requirements for &quot;pointer-like&quot; things such as <code>fn</code>;</li>
+</ul>
+<p>The rules also imply that...</p>
+<ul>
+<li>valid (i.e., compiler-generated) vtables are only required for a <code>*dyn</code> pointer when
+<ul>
+<li>the <code>*dyn</code> pointer is upcast (or invoke methods);</li>
+<li>or, when the <code>*dyn</code> pointer is released to arbitrary code, because that code may upcast (or invoke methods).
+<ul>
+<li>By implication, extending <a href="https://doc.rust-lang.org/std/ptr/fn.null.html"><code>std::ptr::null</code></a> to permit <code>T: ?Sized</code> would not be safe.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Possible future changes...</p>
+<ul>
+<li>without introducing UB, we could loosen the validity invariant if desired, for example to permit NULL as a valid value in unsafe code.</li>
+<li>without introducing UB, we could also loosen the safety invariant to permit a sentinel value (such as NULL), but that would require a branch or other check in the upcast code, which would be less efficient.</li>
+</ul>
+<h2 id="prior-links"><a class="header" href="#prior-links">Prior links</a></h2>
+<ul>
+<li><a href="https://rust-lang.github.io/dyn-upcasting-coercion-initiative/design-discussions/upcast-safety-2.html">Dyn safety write-up</a>, which includes links to prior write-ups</li>
+<li><a href="./upcast-safety-3-options.html">Exhaustive set of validity invariants considered</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../design-discussions/definition.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../design-discussions/upcast-safety-3-options.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../design-discussions/definition.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../design-discussions/upcast-safety-3-options.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item "><a href="index.html">👋 Welcome</a></li><li class="chapter-item "><a href="updates.html">✏️ Updates</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="updates/2021-oct.html">2021-Oct</a></li></ol></li><li class="chapter-item expanded "><a href="CHARTER.html" class="active">📜 Charter</a></li><li class="chapter-item "><a href="explainer.html">📚 Explainer</a></li><li class="chapter-item "><a href="design-discussions/index.html">💬 Design discussions</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="design-discussions/definition.html">Definition</a></li><li class="chapter-item "><a href="design-discussions/upcast-safety-2.html">Upcast safety</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="design-discussions/upcast-safety.html">Older draft 1</a></li></ol></li><li class="chapter-item "><a href="design-discussions/vtable-layout.html">Vtable layout and runtime behavior</a></li></ol></li><li class="chapter-item "><a href="FAQ.html">😕 FAQ</a></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="index.html">👋 Welcome</a></li><li class="chapter-item "><a href="updates.html">✏️ Updates</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="updates/2021-oct.html">2021-Oct</a></li></ol></li><li class="chapter-item expanded "><a href="CHARTER.html" class="active">📜 Charter</a></li><li class="chapter-item "><a href="explainer.html">📚 Explainer</a></li><li class="chapter-item "><a href="design-discussions/index.html">💬 Design discussions</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="design-discussions/definition.html">Definition</a></li><li class="chapter-item "><a href="design-discussions/upcast-safety-3.html">Upcast safety</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="design-discussions/upcast-safety-3-options.html">Detailed options</a></li><li class="chapter-item "><a href="design-discussions/upcast-safety-2.html">Older draft 2</a></li><li class="chapter-item "><a href="design-discussions/upcast-safety.html">Older draft 1</a></li></ol></li><li class="chapter-item "><a href="design-discussions/vtable-layout.html">Vtable layout and runtime behavior</a></li></ol></li><li class="chapter-item "><a href="FAQ.html">😕 FAQ</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -152,8 +152,7 @@
 trait object of type <code>dyn Bar</code> to be cast to a trait object of type <code>dyn Foo</code>
 so long as <code>Bar: Foo</code>.</li>
 </ul>
-<pre><pre class="playground"><code class="language-rust edition2018">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust edition2018"><span class="boring">#![allow(unused)]
 </span>#![feature(trait_upcasting)]
 
 <span class="boring">fn main() {
@@ -174,11 +173,11 @@ let foo: &amp;dyn Foo = bar;
 <li>To support <code>dyn Trait1 + Trait2</code> for general traits (this syntax naturally works, and should continue to work, with auto traits).</li>
 </ul>
 <h2 id="membership"><a class="header" href="#membership">Membership</a></h2>
-<table><thead><tr><th>Role</th><th>Github</th></tr></thead><tbody>
+<div class="table-wrapper"><table><thead><tr><th>Role</th><th>Github</th></tr></thead><tbody>
 <tr><td>[Owner]</td><td><a href="https://github.com/crlf0710">crlf0710</a></td></tr>
 <tr><td>[Liaison]</td><td><a href="https://github.com/nikomatsakis">nikomatsakis</a></td></tr>
 </tbody></table>
-
+</div>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

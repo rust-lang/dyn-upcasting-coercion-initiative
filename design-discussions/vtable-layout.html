@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item "><a href="../index.html">👋 Welcome</a></li><li class="chapter-item "><a href="../updates.html">✏️ Updates</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../updates/2021-oct.html">2021-Oct</a></li></ol></li><li class="chapter-item "><a href="../CHARTER.html">📜 Charter</a></li><li class="chapter-item "><a href="../explainer.html">📚 Explainer</a></li><li class="chapter-item expanded "><a href="../design-discussions/index.html">💬 Design discussions</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../design-discussions/definition.html">Definition</a></li><li class="chapter-item "><a href="../design-discussions/upcast-safety-2.html">Upcast safety</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../design-discussions/upcast-safety.html">Older draft 1</a></li></ol></li><li class="chapter-item expanded "><a href="../design-discussions/vtable-layout.html" class="active">Vtable layout and runtime behavior</a></li></ol></li><li class="chapter-item "><a href="../FAQ.html">😕 FAQ</a></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="../index.html">👋 Welcome</a></li><li class="chapter-item "><a href="../updates.html">✏️ Updates</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../updates/2021-oct.html">2021-Oct</a></li></ol></li><li class="chapter-item "><a href="../CHARTER.html">📜 Charter</a></li><li class="chapter-item "><a href="../explainer.html">📚 Explainer</a></li><li class="chapter-item expanded "><a href="../design-discussions/index.html">💬 Design discussions</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../design-discussions/definition.html">Definition</a></li><li class="chapter-item "><a href="../design-discussions/upcast-safety-3.html">Upcast safety</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../design-discussions/upcast-safety-3-options.html">Detailed options</a></li><li class="chapter-item "><a href="../design-discussions/upcast-safety-2.html">Older draft 2</a></li><li class="chapter-item "><a href="../design-discussions/upcast-safety.html">Older draft 1</a></li></ol></li><li class="chapter-item expanded "><a href="../design-discussions/vtable-layout.html" class="active">Vtable layout and runtime behavior</a></li></ol></li><li class="chapter-item "><a href="../FAQ.html">😕 FAQ</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -151,8 +151,7 @@
 <li>Traverse the tree in post-order, for each <code>TraitRef</code> emit all its associated functions as either <code>Method</code> or <code>Vacant</code> entries. If this <code>TraitRef</code> is not in <code>PrefixSet</code>, emit a <code>TraitVPtr</code> containing a constant pointer to the vtable generated for the type <code>T</code> and this <code>TraitRef</code>.</li>
 </ol>
 <h2 id="example"><a class="header" href="#example">Example</a></h2>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>trait A {
     fn foo_a(&amp;self) {}

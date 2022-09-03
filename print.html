@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item "><a href="index.html">👋 Welcome</a></li><li class="chapter-item "><a href="updates.html">✏️ Updates</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="updates/2021-oct.html">2021-Oct</a></li></ol></li><li class="chapter-item "><a href="CHARTER.html">📜 Charter</a></li><li class="chapter-item "><a href="explainer.html">📚 Explainer</a></li><li class="chapter-item "><a href="design-discussions/index.html">💬 Design discussions</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="design-discussions/definition.html">Definition</a></li><li class="chapter-item "><a href="design-discussions/upcast-safety-2.html">Upcast safety</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="design-discussions/upcast-safety.html">Older draft 1</a></li></ol></li><li class="chapter-item "><a href="design-discussions/vtable-layout.html">Vtable layout and runtime behavior</a></li></ol></li><li class="chapter-item "><a href="FAQ.html">😕 FAQ</a></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="index.html">👋 Welcome</a></li><li class="chapter-item "><a href="updates.html">✏️ Updates</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="updates/2021-oct.html">2021-Oct</a></li></ol></li><li class="chapter-item "><a href="CHARTER.html">📜 Charter</a></li><li class="chapter-item "><a href="explainer.html">📚 Explainer</a></li><li class="chapter-item "><a href="design-discussions/index.html">💬 Design discussions</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="design-discussions/definition.html">Definition</a></li><li class="chapter-item "><a href="design-discussions/upcast-safety-3.html">Upcast safety</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="design-discussions/upcast-safety-3-options.html">Detailed options</a></li><li class="chapter-item "><a href="design-discussions/upcast-safety-2.html">Older draft 2</a></li><li class="chapter-item "><a href="design-discussions/upcast-safety.html">Older draft 1</a></li></ol></li><li class="chapter-item "><a href="design-discussions/vtable-layout.html">Vtable layout and runtime behavior</a></li></ol></li><li class="chapter-item "><a href="FAQ.html">😕 FAQ</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -144,7 +144,7 @@
 <p>This page tracks the work of the dyn upcasting coercion <a href="https://lang-team.rust-lang.org/initiatives.html">initiative</a>! To learn more about what we are trying to do, and to find out the people who are doing it, take a look at the <a href="./CHARTER.html">charter</a>. </p>
 <h2 id="current-status"><a class="header" href="#current-status">Current status</a></h2>
 <p>The following table lists of the stages of an initiative, along with links to the artifacts that will be produced during that stage.</p>
-<table><thead><tr><th>Stage</th><th>State</th><th>Artifact(s)</th></tr></thead><tbody>
+<div class="table-wrapper"><table><thead><tr><th>Stage</th><th>State</th><th>Artifact(s)</th></tr></thead><tbody>
 <tr><td><a href="https://lang-team.rust-lang.org/initiatives/process/stages/proposal.html">Proposal</a></td><td>✅</td><td><a href="https://github.com/rust-lang/lang-team/issues/98">Proposal issue</a></td></tr>
 <tr><td></td><td></td><td><a href="./CHARTER.html">Charter</a></td></tr>
 <tr><td></td><td></td><td><a href="https://github.com/rust-lang/rust/issues/65991">Tracking issue</a></td></tr>
@@ -152,6 +152,7 @@
 <tr><td><a href="https://lang-team.rust-lang.org/initiatives/process/stages/feature-complete.html">Feature complete</a></td><td>💤</td><td>Stabilization report</td></tr>
 <tr><td><a href="https://lang-team.rust-lang.org/initiatives/process/stages/stabilized.html">Stabilized</a></td><td>💤</td><td></td></tr>
 </tbody></table>
+</div>
 <p>Key:</p>
 <ul>
 <li>✅ -- phase complete</li>
@@ -199,8 +200,7 @@ following command.</p>
 trait object of type <code>dyn Bar</code> to be cast to a trait object of type <code>dyn Foo</code>
 so long as <code>Bar: Foo</code>.</li>
 </ul>
-<pre><pre class="playground"><code class="language-rust edition2018">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust edition2018"><span class="boring">#![allow(unused)]
 </span>#![feature(trait_upcasting)]
 
 <span class="boring">fn main() {
@@ -221,11 +221,11 @@ let foo: &amp;dyn Foo = bar;
 <li>To support <code>dyn Trait1 + Trait2</code> for general traits (this syntax naturally works, and should continue to work, with auto traits).</li>
 </ul>
 <h2 id="membership"><a class="header" href="#membership">Membership</a></h2>
-<table><thead><tr><th>Role</th><th>Github</th></tr></thead><tbody>
+<div class="table-wrapper"><table><thead><tr><th>Role</th><th>Github</th></tr></thead><tbody>
 <tr><td>[Owner]</td><td><a href="https://github.com/crlf0710">crlf0710</a></td></tr>
 <tr><td>[Liaison]</td><td><a href="https://github.com/nikomatsakis">nikomatsakis</a></td></tr>
 </tbody></table>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="-explainer"><a class="header" href="#-explainer">📚 Explainer</a></h1>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="-explainer"><a class="header" href="#-explainer">📚 Explainer</a></h1>
 <blockquote>
 <p>The &quot;explainer&quot; is &quot;end-user readable&quot; documentation that explains how to use the feature being deveoped by this initiative.
 If you want to experiment with the feature, you've come to the right place.
@@ -249,6 +249,261 @@ Until the feature enters &quot;feature complete&quot; form, the explainer should
 </ol>
 <p>When the third rule is involved, this unsizing coercion is a dyn upcasting coercion.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="dyn-upcast-safety"><a class="header" href="#dyn-upcast-safety">Dyn upcast safety</a></h1>
+<p>This document proposes a resolution to the last outstanding question blocking <code>dyn</code> upcast.</p>
+<h2 id="background"><a class="header" href="#background">Background</a></h2>
+<p>We are trying to enable &quot;upcasts&quot; from a <code>dyn Trait</code> to its supertraits:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>trait Foo {
+    fn foo_method(&amp;self);
+}
+trait Bar: Foo {
+    fn bar_method(&amp;self);
+}
+
+let x: &amp;dyn Bar = /* ... */;
+let y: &amp;dyn Foo = x; // compiles
+<span class="boring">}
+</span></code></pre></pre>
+<p>The key factor for these upcasts is that they require adjusting the vtable. The current implementation strategy is that the vtables for the <code>Bar</code> trait embed pointers to a <code>Foo</code> vtable within them:</p>
+<pre><code>+----------------------------+
+| Bar vtable for some type T |
+|----------------------------|
+| Foo vtable                 | ----------&gt; +------------------+
+| foo_method                 | -----+      | Foo vtable for T |
+| bar_method                 | --+  |      |------------------|
++----------------------------+   |  |      | foo_method       | ---+
+                                 |  |      +------------------+    |
+                                 |  |                              |
+                                 |  +---&gt; &lt;T as Foo&gt;::foo_method &lt;-+
+                                 v
+                     &lt;T as Bar&gt;::bar_method
+                 
+(this diagram is only meant to convey the general idea of the vtable
+ layout, and doesn't represent the exact offsets we would use etc;
+ in fact, with the current implementation,
+ the first supertrait is stored 'inline' and hence no load is required)
+</code></pre>
+<p>This way, given a <code>&amp;dyn Bar</code> object, we convert its <code>Bar</code> vtable to the appropriate <code>Foo</code> vtable by loading the appropriate field.</p>
+<p>Although we don't want to commit to a particular implementation strategy, we do want to leave room for this strategy. One implication is that performing an upcast may require loading from the vtable, which implies that the vtable must be a valid pointer to an actual Rust vtable. Although <code>&amp;dyn Bar</code> references would always contain a valid vtable, the same is not necessarily true for a raw pointer like <code>*const dyn Bar</code> or <code>*mut dyn Bar</code>. </p>
+<p>In the language today, we only support &quot;noop upcasts&quot; that don't affect the vtable, and these are safe (e.g., converting from <code>*const dyn Foo + Send</code> to <code>*const dyn Foo</code>). If we extend the set of upcasts to permit vtable-adjusting upcasts, like <code>*const dyn Bar</code> to <code>*const dyn Foo</code>, this implies that, for safe code at least, all <code>*const dyn Trait</code> values must have a valid vtable, so that we know we can safely load the required field and perform the upcast.</p>
+<p>On the other hand, we do not generally require raw <code>*mut T</code> pointers to point to valid data. In fact, we explicitly permit them to have any value, including null, and only require that they point to valid data when they are dereferenced. Because dereferencing a raw pointer is an unsafe operation, it has always been considered safe to expose an arbitrary raw pointer to unsafe code -- the unsafety arises when you take a raw pointer from an unknown source and dereference it, since unless you can trace the origin of that pointer you can't possible guarantee that it is valid to dereference.</p>
+<p>This brings us to the conflict:</p>
+<ul>
+<li>It has historically been safe to &quot;release&quot; a raw pointer to safe code, but not safe to receive one (since you cannot know if it is valid).</li>
+<li>It has historically been safe to upcast <code>*const dyn</code> values (e.g., <code>*const dyn Foo + Send</code> to <code>*const dyn Foo</code>). 
+<ul>
+<li>Unlike the upcasts we are considering now, this upcast does not require changing the vtable at runtime, but the distinction is subtle for end-users.</li>
+<li>Moreover, there are future extensions (e.g., upcasting <code>*const dyn Foo + Bar</code> to <code>*const dyn Foo</code>) that would require adjusting the vtable much like the upcasts currently being stabilized. </li>
+</ul>
+</li>
+</ul>
+<h2 id="related-future-consideration-virtual-method-calls-on-raw-pointers"><a class="header" href="#related-future-consideration-virtual-method-calls-on-raw-pointers">Related future consideration: virtual method calls on raw pointers</a></h2>
+<p>There have been requests to extend traits with the option to include raw pointer methods:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>trait PtrLike {
+    fn is_null(v: *const Self) -&gt; bool;
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>These methods would be useful when writing unsafe code because having an <code>&amp;self</code> method requires satisfying the validity conditions of an <code>&amp;</code>-reference, which may not be possible. If we did have such methods, however, it raises the question of whether it would be safe to invoke <code>is_null</code> on a <code>*const dyn PtrLike</code> reference. Just as with upcasting, invoking a method from the vtable requires loading from the vtable, and hence requires a valid vtable generated by the compiler.</p>
+<p>The solution we propose in this document also resolves this future dilemma.</p>
+<h2 id="definitions-validity-vs-safety-invariant"><a class="header" href="#definitions-validity-vs-safety-invariant">Definitions: validity vs safety invariant</a></h2>
+<p>We adopt the terms <em>validity</em> and <em>safety</em> invariant from the <a href="https://rust-lang.github.io/unsafe-code-guidelines/glossary.html">unsafe code guidelines</a>:</p>
+<blockquote>
+<p>The <em>validity invariant</em> is an invariant that all data must uphold any time it is accessed or copied in a typed manner. This invariant is known to the compiler and exploited by optimizations such as improved enum layout or eliding in-bounds checks.</p>
+<p>The <em>safety invariant</em> is an invariant that safe code may assume all data to uphold. This invariant is used to justify which operations safe code can perform. The safety invariant can be temporarily violated by unsafe code, but must always be upheld when interfacing with unknown safe code. It is not relevant when arguing whether some program has UB, but it is relevant when arguing whether some code safely encapsulates its unsafety -- in other words, it is relevant when arguing whether some library is sound.</p>
+</blockquote>
+<p>In short, the <em>validity invariant</em> defines a condition that must always be true, even in unsafe code, and the <em>safety invariant</em> defines an invariant that unsafe code must guarantee before a value can be released to be used by arbitrary code.</p>
+<h2 id="contours-of-the-solution-space"><a class="header" href="#contours-of-the-solution-space">Contours of the solution space</a></h2>
+<p>We can fix this conflict in one of two basic ways:</p>
+<p>First, <strong>we could make vtable-adjusting upcasts casts (and <code>*Self</code> method calls) unsafe</strong>. This is  difficult to implement and would require changes to the <code>Coerce</code> trait, which is already excessively complicated. In exchange, it offers at best marginal benefit: raw <code>*dyn</code> pointers can be released to safe code, but safe code can't do anything interesting with them. For this reason, we do not recommend this option.</p>
+<p>If vtable-adjusting casts (and <code>*Self</code> method calls) are safe, then the <strong>safety invariant</strong> for <code>*dyn</code> types must be that their metadata points to a <strong>fully valid vtable</strong> (i.e., a vtable created by the compiler). This ensures safe code can perform upcasts or dynamic dispatch. This also implies that <code>std::ptr::null</code> (which is safe) cannot be extended to <code>T</code> where <code>T: ?Sized</code> unless further changes are made, since we would need to provide a valid vtable (it would be possible to permit a sentinel value, like null, to be used, but that would imply that upcasting must have a branch, making it less efficient).</p>
+<p>There are, however, various options for the <strong>validity invariant</strong>, ranging from no invariant to requiring a fully valid vtable at all times. The strict invariants offer some benefits, such as the ability to have a niche for <code>*dyn</code> pointers. We survey the options here:</p>
+<div class="table-wrapper"><table><thead><tr><th>Validity invariant for <code>*dyn</code> metadata</th><th>Supports niche</th><th>Can be initialized with <code>std::mem::zeroed</code></th><th>Constant initializer</th></tr></thead><tbody>
+<tr><td>None</td><td></td><td>✅</td><td>✅</td></tr>
+<tr><td>Word-aligned</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>Word-aligned, non-null</td><td>✅</td><td></td><td>✅</td></tr>
+<tr><td>Valid vtable</td><td>✅</td><td></td><td></td></tr>
+</tbody></table>
+</div>
+<p>Explanations for the column titles:</p>
+<ul>
+<li>Validity invariant for <code>*dyn</code> metadata -- describes the invariant that applies to the metadata for a <code>*dyn</code> value.</li>
+<li>Supports niche -- true if there is a niche value so that <code>sizeof(Option&lt;*const dyn Foo&gt;) == sizeof(*const dyn Foo)</code>.</li>
+<li>Can be initialized with <code>std::mem::zeroed</code> -- true if <code>std::mem::zeroed</code> can be used to create a valid value (very convenient). This makes it trivial to innitialize a <code>*const dyn</code> with a dummy value, though the value cannot be released to safe code.</li>
+<li>Constant initializer -- true if there is some constant value for <code>*const dyn Foo</code> that satisfies the validity invariant, no matter the trait <code>Foo</code>. This makes it easy to initialize a <code>*const dyn</code> with a dummy value, though the value cannot be released to safe code.</li>
+</ul>
+<p>Other points:</p>
+<ul>
+<li><code>*dyn</code> values <a href="https://play.rust-lang.org/?version=nightly&amp;mode=debug&amp;edition=2021&amp;gist=bcd18cd3870ba98e2c59b527418f8f68">currently have a niche</a>.</li>
+<li>Other pointer-like values (such as <code>fn</code> and <code>&amp;</code>-references) are expected to have a validity invariant of word-aligned, non-null.</li>
+<li>Whichever option we use, we can backwards-compatibly move &quot;up the table&quot; and adopt a less-strict validity invariant without introducing UB into any extant programs.</li>
+</ul>
+<h2 id="proposal"><a class="header" href="#proposal">Proposal</a></h2>
+<p>The proposal is as follows:</p>
+<ul>
+<li>Vtable-adjusting upcasts are <strong>safe operations</strong>. The upcast is UB if performed on a value without a valid vtable</li>
+<li>As such, the &quot;safety invariant&quot; requires a <strong>fully valid vtable</strong>.</li>
+<li>The &quot;validity invariant&quot; requires <code>*dyn</code> metadata to be <strong>word-aligned and non-null</strong>.</li>
+</ul>
+<p>Vtable-adjusting upcasts are defined as:</p>
+<ul>
+<li>Trait upcasts that alter the set of methods that can be invoked on the resulting value at runtime (e.g., <code>dyn Bar</code> to <code>dyn Foo</code> from the introduction). In particular, upcasts that simply add or remove auto-traits are not vtable-adjusting (e.g., <code>dyn Debug + Send</code> to <code>dyn Debug</code>).</li>
+</ul>
+<p>This approach...</p>
+<ul>
+<li>permits safe upcasting (and method calls, in the future);</li>
+<li>preserves the existing niche for <code>*const dyn</code>;</li>
+<li>is consistent with other validity requirements for &quot;pointer-like&quot; things such as <code>fn</code>;</li>
+</ul>
+<p>The rules also imply that...</p>
+<ul>
+<li>valid (i.e., compiler-generated) vtables are only required for a <code>*dyn</code> pointer when
+<ul>
+<li>the <code>*dyn</code> pointer is upcast (or invoke methods);</li>
+<li>or, when the <code>*dyn</code> pointer is released to arbitrary code, because that code may upcast (or invoke methods).
+<ul>
+<li>By implication, extending <a href="https://doc.rust-lang.org/std/ptr/fn.null.html"><code>std::ptr::null</code></a> to permit <code>T: ?Sized</code> would not be safe.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Possible future changes...</p>
+<ul>
+<li>without introducing UB, we could loosen the validity invariant if desired, for example to permit NULL as a valid value in unsafe code.</li>
+<li>without introducing UB, we could also loosen the safety invariant to permit a sentinel value (such as NULL), but that would require a branch or other check in the upcast code, which would be less efficient.</li>
+</ul>
+<h2 id="prior-links"><a class="header" href="#prior-links">Prior links</a></h2>
+<ul>
+<li><a href="https://rust-lang.github.io/dyn-upcasting-coercion-initiative/design-discussions/upcast-safety-2.html">Dyn safety write-up</a>, which includes links to prior write-ups</li>
+<li><a href="design-discussions/./upcast-safety-3-options.html">Exhaustive set of validity invariants considered</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="upcast-safety-options-considered"><a class="header" href="#upcast-safety-options-considered">Upcast safety options considered</a></h1>
+<p>This document details a number of options that were considered while preparing the <a href="design-discussions/./upcast-safety-3.html">upcast-safety-3</a> proposal.</p>
+<h2 id="summary-table"><a class="header" href="#summary-table">Summary table</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>proposal</th><th>unconditional-upcast</th><th>can-create-from-zeroed</th><th>can-create-from-arbitrary-bits</th><th>niche-for-dyn</th><th>can-release-something-zeroed-to-safe</th></tr></thead><tbody>
+<tr><td>fully-valid-vtable</td><td>:ballot_box_with_check:</td><td>:octagonal_sign:</td><td>:octagonal_sign:</td><td>:ballot_box_with_check:</td><td>:octagonal_sign:</td></tr>
+<tr><td>null-placeholder</td><td>:octagonal_sign:</td><td>:ballot_box_with_check:</td><td>:octagonal_sign:</td><td>:ballot_box_with_check:</td><td>:octagonal_sign:</td></tr>
+<tr><td>operations-are-ub</td><td>:ballot_box_with_check:</td><td>:ballot_box_with_check:</td><td>:ballot_box_with_check:</td><td>:octagonal_sign:</td><td>:octagonal_sign:</td></tr>
+<tr><td>operations-are-ub-nza</td><td>:ballot_box_with_check:</td><td>:octagonal_sign:</td><td>:octagonal_sign:</td><td>:ballot_box_with_check:</td><td>:octagonal_sign:</td></tr>
+</tbody></table>
+</div>
+<h2 id="true-no-matter-what"><a class="header" href="#true-no-matter-what">True no matter what</a></h2>
+<ul>
+<li><code>MaybeUnit&lt;*const dyn Foo&gt;</code> can be used to create an uninitialized <code>*const dyn Foo</code> easily, like with any other type.</li>
+<li>If we add <code>*const self</code> methods (which we should), and permit those to be invoked from safe code (which would be consistent, given that one can invoke a <code>self</code> method defined on a <code>*const T</code> type in safe code), then it will be <em>unsound</em> (i.e., potentially allow safe code to create UB) to release a <code>*const dyn Foo</code> to safe code unless the vtable is <em>fully valid</em> (created by the compiler).</li>
+<li>vtable layout is not defined.</li>
+<li>No matter what proposal we adopt, if you create a <code>*const dyn Foo</code> with anything less than a fully valid vtable (including e.g. a null placeholder), <strong>you must not allow that to escape to arbitrary code</strong>
+<ul>
+<li>This is actually a consequence of wanting to support <code>*const self</code> methods and method dispatch -- it could conceivably be true only for a trait <code>Foo</code> is it includes a <code>*const self</code> method, since those are not yet legal. </li>
+</ul>
+</li>
+</ul>
+<h2 id="proposals"><a class="header" href="#proposals">Proposals</a></h2>
+<h3 id="fully-valid-vtable"><a class="header" href="#fully-valid-vtable">fully-valid-vtable</a></h3>
+<p>It is UB to create a <code>*const dyn Foo</code> unless the vtable is fully valid (given that vtable layouts are undefined, this means produced by the compiler for the time being).</p>
+<p>If you need to create a <code>*const dyn Foo</code> and don't have a valid vtable available, you can use <code>MaybeUninit&lt;*const dyn Foo&gt;</code>, or a union, or <code>Option</code>, which is probably good practice.</p>
+<p>Forwards compatibility:</p>
+<ul>
+<li>Given that vtable layouts are not defined, there isn't much you can do at present in unsafe code with a vtable besides invoking methods, upcasting, computing the size, or other such operations.</li>
+<li>If we were to adopt other proposals that weaken the validity requirement, compatibility is a bit complex. At the time we make the change, all <code>*const dyn</code> values in extant code would have valid vtables. But people would be able to write code that created values with less-than-valid vtables (e.g., maybe null, etc, depending on what change we made). They would not however be able to give that code to other functions, even unsafe functions, unless those functions stated explicitly that they don't require the <code>*const dyn</code> value to have a fully valid vtable (i.e., they promised not to upcast it, etc).
+<ul>
+<li>This is effectively the same as the operations-are-ub proposal, even if we adopt it today. You can create invalid vtables, but you cannot allow them to escape.</li>
+</ul>
+</li>
+</ul>
+<h3 id="null-placeholder"><a class="header" href="#null-placeholder">null-placeholder</a></h3>
+<p>It is UB to create a <code>*const dyn Foo</code> unless the vtable is &quot;sufficiently valid&quot;, except that NULL is permitted as a placeholder value.</p>
+<p>This has the consequence that when we upcast, we have to check for NULL, which is less efficient.</p>
+<p>Upshot:</p>
+<ul>
+<li>You may create a <code>*const dyn Foo</code> from <code>std::mem::zeroed</code>.</li>
+<li>The only thing you can do on a <code>*const dyn Foo</code> that is zeroed is copy it and upcast it.
+<ul>
+<li><em>Currently</em>, this means you can release a <code>*const dyn Foo</code> to safe code, but if we were to add <code>*const self</code> methods, that might no longer be true, unless those methods are also prepared to deal with the null pointer in some way (e.g., abort?), or unless it's unsafe to invoke such a method (seems odd). But that's really an issue for <code>*const self</code> methods to deal with, since it's already true today.</li>
+</ul>
+</li>
+<li>If receiving one from an unknown source, you can assume the vtable is either value for some type or NULL (of course, you can't assume anything about the <em>data</em> pointer, and vtable layouts are unknown, so it's not clear how useful that is).</li>
+</ul>
+<p>Forwards compatibility:</p>
+<ul>
+<li>We can adopt any other proposal later, but we might lose the niche.</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>We can in theory support a niche with a value like 0x1 for the vtable? </li>
+</ul>
+<h3 id="operations-are-ub"><a class="header" href="#operations-are-ub">operations-are-ub</a></h3>
+<p>There is no validity invariant for <code>*const dyn Foo</code> -- the vtable can be arbitrary. However, the only &quot;non-UB&quot; operation that you can do on a <code>*const dyn Foo</code> is to copy it, unless the vtable is known to be valid (produced by the compiler). Without a known valid vtable, all other options, including but not limited to the following, are UB:</p>
+<ul>
+<li>Upcasting it do <code>*const dyn Bar</code> (where <code>trait Foo: Bar</code>)</li>
+<li>Invoking methods from <code>Foo</code> (not currently possible without arbitrary-self-types)</li>
+<li>Creating a safe pointer type (e.g., <code>&amp;*foo</code>)</li>
+</ul>
+<p>Upshot:</p>
+<ul>
+<li>You can create a <code>*const dyn Bar</code> with <code>mem::zeroed</code>, but it must not escape to safe code (that would permit the safe code to create UB, and hence be unsound).</li>
+<li>If you are going to do anything besides copy that value around, it must be known to have a valid vtable at that time, or UB will result.</li>
+</ul>
+<p>Forwards compatibility:</p>
+<ul>
+<li>If we adopt this proposal, we can't move to the others without introducing UB into otherwise valid code (consequence of the can-create-from-arbitrary-bits)</li>
+</ul>
+<h3 id="operations-are-ub-nza"><a class="header" href="#operations-are-ub-nza">operations-are-ub-nza</a></h3>
+<p>The validity invariant for <code>*const dyn Foo</code> is that the vtable must be non-zero and aligned, ensuring a niche. However, -- the vtable can be arbitrary. However, the only &quot;non-UB&quot; operation that you can do on a <code>*const dyn Foo</code> is to copy it, unless the vtable is known to be valid (produced by the compiler). Without a known valid vtable, all other options, including but not limited to the following, are UB:</p>
+<h2 id="properties"><a class="header" href="#properties">Properties</a></h2>
+<h3 id="unconditional-upcast"><a class="header" href="#unconditional-upcast">unconditional-upcast</a></h3>
+<p>If this property holds, then...</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>trait Foo: Bar { }
+
+let x: *const dyn Foo = ...;
+let y: *const dyn Bar = x;
+<span class="boring">}
+</span></code></pre></pre>
+<p>can be done without any conditional operations.</p>
+<h3 id="can-create-from-zeroed"><a class="header" href="#can-create-from-zeroed">can-create-from-zeroed</a></h3>
+<p>If this property holds, then...</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x: *const dyn Foo = std::mem::zeroed();
+<span class="boring">}
+</span></code></pre></pre>
+<p>...is not insta-UB.</p>
+<h3 id="can-create-from-arbitrary-bits"><a class="header" href="#can-create-from-arbitrary-bits">can-create-from-arbitrary-bits</a></h3>
+<p>If this property holds, then...</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x: *const dyn Foo = /* arbitrary bits */;
+<span class="boring">}
+</span></code></pre></pre>
+<p>...is not insta-UB.</p>
+<h3 id="niche-for-dyn"><a class="header" href="#niche-for-dyn">niche-for-dyn</a></h3>
+<p>Raw pointers for sized types do not presently have niches -- but under some of these proposals, vtables could potentially act as a niche, such that <code>Option&lt;*const dyn Foo&gt;</code> has the same size as <code>*const dyn Foo</code>. This seems like a pretty niche (no pun intended) advantage, and is not clearly desirable, but it helps to illustrate certain things.</p>
+<p>Note that in some cases this property would be lost if we made future 'forwards compatible' changes (e.g., by moving from a more restricted variant to operations-are-ub).</p>
+<h2 id="removed-proposals"><a class="header" href="#removed-proposals">Removed proposals</a></h2>
+<p>There were some ideas that turned out to not add value and were removed from the vtable.</p>
+<h3 id="sufficiently-valid-vtable"><a class="header" href="#sufficiently-valid-vtable">sufficiently-valid-vtable</a></h3>
+<p>An earlier doc proposed a &quot;sufficiently valid&quot; vtable as the condition, where it was only legal to create a <code>*const dyn Foo</code> with a valid vtable, but you could not generally assume the vtable was valid. However, it was pointed out that because vtable layout is unstable, it's not clear what this &quot;sufficiently valid&quot; language adds. </p>
+<p>The original intent was to prevent unsafe code authors who receive a <code>*const dyn Foo</code> from assuming that the vtable was valid. The fear was that if we made changes that permitted a &quot;less than fully valid&quot; vtable, that unsafe code would now be getting fewer guaranteese than it had before. But given that vtable layouts are unstable, the code can't do much in practice, and in any case, if we <em>did</em> change the requirements, we could safe that &quot;unsafe code which doesn't say otherwise requires a fully valid vtable&quot;.</p>
+<p>Spelling out the scenarios:</p>
+<ol>
+<li>when I release to safe code, full validity is required, because there are safe operations that require it</li>
+<li>so if I write a safe function, I can always assume full validity on input</li>
+<li>if I write an unsafe fn, in Rust <em>now</em> I can assume that I get full validity (because we defined that as the invariant), but the only thing I can do with that are defined operations at present (e.g., invoke methods, etc). If in the future we define the layout, I could read data from that vtable, but since it is required to be fully valid, that seems ok. In the future, we could loosen the validity requirement, but we would say that unsafe functions must explicitly state that they accept a <code>*const dyn</code> with a less than fully valid vtable (in other words, we'd have &quot;edition-like&quot; treatment of validity invariants.</li>
+</ol>
+<p>Regardless, it's not clear what kind of &quot;less than fully valid&quot; vtables we would accept. Some possibilities:</p>
+<ul>
+<li>Null placeholder.</li>
+<li>A &quot;skeleton&quot; vtable that permits upcast but has invalid methods. Feels awfully niche, not worth it.</li>
+</ul>
+<h3 id=""><a class="header" href="#"></a></h3>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="dyn-upcast-safety-1"><a class="header" href="#dyn-upcast-safety-1">Dyn upcast safety</a></h1>
+<p><strong>NB: This document is outdated.</strong> <a href="design-discussions/./upcast-safety-3.html">Click here to see the latest version.</a></p>
 <h2 id="summary-1"><a class="header" href="#summary-1">Summary</a></h2>
 <p>This doc concerns possible resolutions for the following potential problem:</p>
 <ul>
@@ -284,7 +539,7 @@ Until the feature enters &quot;feature complete&quot; form, the explainer should
 </ul>
 </li>
 </ul>
-<h2 id="background"><a class="header" href="#background">Background</a></h2>
+<h2 id="background-1"><a class="header" href="#background-1">Background</a></h2>
 <h3 id="unsize-coercions-are-possible-in-safe-code"><a class="header" href="#unsize-coercions-are-possible-in-safe-code">Unsize coercions are possible in safe code</a></h3>
 <p>A brief review of the <a href="https://github.com/rust-lang/rfcs/blob/master/text/0982-dst-coercion.md">DST coercion design</a>:</p>
 <ul>
@@ -304,8 +559,7 @@ Until the feature enters &quot;feature complete&quot; form, the explainer should
 </li>
 </ul>
 <p>This design permits one to write generic code that performances unsized coercions, but the trait is unstable so this only works on nightly:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>// Unstable:
 fn foo&lt;PT, PU&gt;(pt: PT) -&gt; PU 
@@ -331,8 +585,7 @@ where
 <p>Although not directly relevant here, there is another operation that requires accessing the vtable, which is finding the offset of fields -- see <a href="design-discussions/upcast-safety-2.html#mfo">the discussion in the appendices</a> for details. This operation is however only permitted in unsafe code because it requires a dereference of the raw pointer.</p>
 <h3 id="ergo-upcasting-raw-pointers-is-possible-in-safe-code"><a class="header" href="#ergo-upcasting-raw-pointers-is-possible-in-safe-code">Ergo, upcasting raw pointers is possible in safe code</a></h3>
 <p>Without any further changes, the following upcasting is legal in safe Rust (<a href="https://play.rust-lang.org/?version=nightly&amp;mode=debug&amp;edition=2021&amp;gist=37e49f69ebf992856b07a430c4d5510f">playground</a>):</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span>#![feature(trait_upcasting])]
 
 <span class="boring">fn main() {
@@ -370,6 +623,16 @@ fn convert(x: *const dyn Sub) -&gt; *const dyn Sup {
 <li><code>transmute</code> is unsafe, but it would indeed be a requirement that users of transmute must uphold</li>
 <li><code>null</code>, if extended to unsized types, would be tricky -- we would need to have some way to get a &quot;dummy&quot; vtable that is structurally sound enough to permit upcasting, but which has (for example) null pointers for the actual methods. This is, however, eminently doable.</li>
 </ul>
+<h3 id="interaction-raw-pointer-method-calls"><a class="header" href="#interaction-raw-pointer-method-calls">Interaction: Raw pointer method calls</a></h3>
+<p>It would be useful if unsafe code could declare <code>*const self</code> and <code>*mut self</code> methods in traits</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait FreeMe {
+    pub unsafe fn free_me(*const self);
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Given that using <code>&amp;self</code> implies (for ex</p>
 <h2 id="core-decision-to-be-made"><a class="header" href="#core-decision-to-be-made">Core decision to be made</a></h2>
 <p>The core decision to be made is to choose between two paths:</p>
 <ul>
@@ -399,8 +662,7 @@ fn convert(x: *const dyn Sub) -&gt; *const dyn Sup {
 <p>The following options have been identified. The preferred solution is not yet clear.</p>
 <h3 id="rawunsafe-make-raw-pointer-upcasting-unsafe-not-possible-once-dyn-subtrait-unsizedyn-supertrait-is-stable"><a class="header" href="#rawunsafe-make-raw-pointer-upcasting-unsafe-not-possible-once-dyn-subtrait-unsizedyn-supertrait-is-stable">RawUnsafe: Make raw pointer upcasting unsafe (not possible once <code>dyn SubTrait: Unsize&lt;dyn SuperTrait&gt;</code> is stable)</a></h3>
 <p>We could permit &quot;safe pointer&quot; upcasting but make raw pointer upcasting unsafe. This would require changing the design of the coercion traits somewhat. We would introduce a new &quot;magic trait&quot; <code>RawUnsize</code>, analogous to <code>Unsize</code> except that it doesn't permit upcasting or any other operations that could require valid metadata. We would then modify the impl of <code>CoerceUnsized</code> for raw pointers to be:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>impl&lt;T, U&gt; CoerceUnsized&lt;*const U&gt; for *const T where
     T: Unsize&lt;U&gt; + ?Sized,
@@ -408,8 +670,7 @@ fn convert(x: *const dyn Sub) -&gt; *const dyn Sup {
 <span class="boring">}
 </span></code></pre></pre>
 <p>and it would become</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>impl&lt;T, U&gt; CoerceUnsized&lt;*const U&gt; for *const T where
     T: RawUnsize&lt;U&gt; + ?Sized,
@@ -417,8 +678,7 @@ fn convert(x: *const dyn Sub) -&gt; *const dyn Sup {
 <span class="boring">}
 </span></code></pre></pre>
 <p>To support upcasting on raw pointers, we can then introduce some other intrinsic for doing raw pointer upcast, such as something like this (modulo stacked borrows, which this <em>particular</em> definition may invalidate):</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>/// Unsafefy condition: If the metadata for `T` must be valid.
 pub unsafe fn unsize_raw_pointer&lt;T, U&gt;(t: *const T) -&gt; *const U
@@ -462,8 +722,7 @@ where
 <li>If the pointer is not initialized, and hence you don't know which vtable to use, you have the same options as described under VISufficientlyValid.</li>
 </ul>
 <p>The primary downsice of this proposal versus VISufficientlyValid is that the causes of UB are rather more subtle. Instead of UB occurring when the pointer is created, it occurs when an upcast occurs, and the locations for upcasts can be implicit (eg., any assignment or function call). Consider the following example:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn noop(x: *mut dyn SuperTrait) { 
     /* look ma, empty body */
@@ -488,8 +747,7 @@ fn creator() {
 <p>Adopting this option remains a possibility in the future, as it would be a backwards compatible extension to the above rule.</p>
 <h3 id="sistructvalid-extend-safety-condition-to-require-a-structurally-valid-vtable-still-possible-in-the-future"><a class="header" href="#sistructvalid-extend-safety-condition-to-require-a-structurally-valid-vtable-still-possible-in-the-future">SIStructValid: Extend safety condition to require a &quot;structurally valid&quot; vtable (still possible in the future)</a></h3>
 <p>Instead of requiring a valid vtable, we could require a &quot;structurally valid&quot; vtable. This vtable would have null pointers for all methods as well as a dummy type-id but would have the same &quot;structure&quot; as an ordinary vtable. There would be an intrinsic that gives access to the vtable:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn dummy_vtable::&lt;T: ?Sized&gt;() -&gt; T::Metadata
 <span class="boring">}
@@ -517,8 +775,7 @@ fn creator() {
 </ul>
 <h3 id="metadata-and-field-offsets"><a class="header" href="#metadata-and-field-offsets">Metadata and field offsets</a></h3>
 <p>Consider these struct definitions:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>struct RefCounted&lt;T&gt; {
     counter: usize,
@@ -532,22 +789,21 @@ struct Foo&lt;U&gt; {
 <span class="boring">}
 </span></code></pre></pre>
 <p>and now assume that I have a <code>*const RefCounted&lt;Foo&lt;u32&gt;&gt;</code> which is coerced:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let pointer1: *const RefCounted&lt;Foo&lt;u32&gt;&gt; = ...;
 let pointer2: *const RefCounted&lt;Foo&lt;dyn Debug&gt;&gt; = pointer1;
 <span class="boring">}
 </span></code></pre></pre>
 <p>If I now try to get the address of the field <code>field</code>...</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let pointer3: *const u32 = unsafe { raw_addr!((*pointer2).data.field) };
 <span class="boring">}
 </span></code></pre></pre>
 <p>...this operation requires valid metadata. This is because the offset of <code>field</code> is a function of the alignment of <code>Foo&lt;U&gt;</code>, which is a function of the alignment of <code>U</code>. In these cases, the compiler will load the alignment from the vtable and do the required address computations itself.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="upcast-safety"><a class="header" href="#upcast-safety">Upcast safety</a></h1>
+<p><strong>NB: This document is outdated.</strong> <a href="design-discussions/./upcast-safety-3.html">Click here to see the latest version.</a></p>
 <h2 id="scenario"><a class="header" href="#scenario">Scenario</a></h2>
 <ul>
 <li>Casting <code>*dyn Foo</code> to <code>*dyn Bar</code> requires adjusting the vtable from a vtable for <code>Foo</code> to one for <code>Bar</code></li>
@@ -610,8 +866,7 @@ let pointer2: *const RefCounted&lt;Foo&lt;dyn Debug&gt;&gt; = pointer1;
 <li>Traverse the tree in post-order, for each <code>TraitRef</code> emit all its associated functions as either <code>Method</code> or <code>Vacant</code> entries. If this <code>TraitRef</code> is not in <code>PrefixSet</code>, emit a <code>TraitVPtr</code> containing a constant pointer to the vtable generated for the type <code>T</code> and this <code>TraitRef</code>.</li>
 </ol>
 <h2 id="example"><a class="header" href="#example">Example</a></h2>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>trait A {
     fn foo_a(&amp;self) {}

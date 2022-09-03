@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Upcast safety - Dyn upcast initiative</title>
+        <title>Older draft 2 - Dyn upcast initiative</title>
         <!-- Custom HTML head -->
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item "><a href="../index.html">👋 Welcome</a></li><li class="chapter-item "><a href="../updates.html">✏️ Updates</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../updates/2021-oct.html">2021-Oct</a></li></ol></li><li class="chapter-item "><a href="../CHARTER.html">📜 Charter</a></li><li class="chapter-item "><a href="../explainer.html">📚 Explainer</a></li><li class="chapter-item expanded "><a href="../design-discussions/index.html">💬 Design discussions</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../design-discussions/definition.html">Definition</a></li><li class="chapter-item expanded "><a href="../design-discussions/upcast-safety-2.html" class="active">Upcast safety</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../design-discussions/upcast-safety.html">Older draft 1</a></li></ol></li><li class="chapter-item "><a href="../design-discussions/vtable-layout.html">Vtable layout and runtime behavior</a></li></ol></li><li class="chapter-item "><a href="../FAQ.html">😕 FAQ</a></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="../index.html">👋 Welcome</a></li><li class="chapter-item "><a href="../updates.html">✏️ Updates</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../updates/2021-oct.html">2021-Oct</a></li></ol></li><li class="chapter-item "><a href="../CHARTER.html">📜 Charter</a></li><li class="chapter-item "><a href="../explainer.html">📚 Explainer</a></li><li class="chapter-item expanded "><a href="../design-discussions/index.html">💬 Design discussions</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../design-discussions/definition.html">Definition</a></li><li class="chapter-item expanded "><a href="../design-discussions/upcast-safety-3.html">Upcast safety</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../design-discussions/upcast-safety-3-options.html">Detailed options</a></li><li class="chapter-item expanded "><a href="../design-discussions/upcast-safety-2.html" class="active">Older draft 2</a></li><li class="chapter-item "><a href="../design-discussions/upcast-safety.html">Older draft 1</a></li></ol></li><li class="chapter-item "><a href="../design-discussions/vtable-layout.html">Vtable layout and runtime behavior</a></li></ol></li><li class="chapter-item "><a href="../FAQ.html">😕 FAQ</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -141,6 +141,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="dyn-upcast-safety"><a class="header" href="#dyn-upcast-safety">Dyn upcast safety</a></h1>
+<p><strong>NB: This document is outdated.</strong> <a href="./upcast-safety-3.html">Click here to see the latest version.</a></p>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>This doc concerns possible resolutions for the following potential problem:</p>
 <ul>
@@ -196,8 +197,7 @@
 </li>
 </ul>
 <p>This design permits one to write generic code that performances unsized coercions, but the trait is unstable so this only works on nightly:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>// Unstable:
 fn foo&lt;PT, PU&gt;(pt: PT) -&gt; PU 
@@ -223,8 +223,7 @@ where
 <p>Although not directly relevant here, there is another operation that requires accessing the vtable, which is finding the offset of fields -- see <a href="#mfo">the discussion in the appendices</a> for details. This operation is however only permitted in unsafe code because it requires a dereference of the raw pointer.</p>
 <h3 id="ergo-upcasting-raw-pointers-is-possible-in-safe-code"><a class="header" href="#ergo-upcasting-raw-pointers-is-possible-in-safe-code">Ergo, upcasting raw pointers is possible in safe code</a></h3>
 <p>Without any further changes, the following upcasting is legal in safe Rust (<a href="https://play.rust-lang.org/?version=nightly&amp;mode=debug&amp;edition=2021&amp;gist=37e49f69ebf992856b07a430c4d5510f">playground</a>):</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span>#![feature(trait_upcasting])]
 
 <span class="boring">fn main() {
@@ -262,6 +261,16 @@ fn convert(x: *const dyn Sub) -&gt; *const dyn Sup {
 <li><code>transmute</code> is unsafe, but it would indeed be a requirement that users of transmute must uphold</li>
 <li><code>null</code>, if extended to unsized types, would be tricky -- we would need to have some way to get a &quot;dummy&quot; vtable that is structurally sound enough to permit upcasting, but which has (for example) null pointers for the actual methods. This is, however, eminently doable.</li>
 </ul>
+<h3 id="interaction-raw-pointer-method-calls"><a class="header" href="#interaction-raw-pointer-method-calls">Interaction: Raw pointer method calls</a></h3>
+<p>It would be useful if unsafe code could declare <code>*const self</code> and <code>*mut self</code> methods in traits</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait FreeMe {
+    pub unsafe fn free_me(*const self);
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Given that using <code>&amp;self</code> implies (for ex</p>
 <h2 id="core-decision-to-be-made"><a class="header" href="#core-decision-to-be-made">Core decision to be made</a></h2>
 <p>The core decision to be made is to choose between two paths:</p>
 <ul>
@@ -291,8 +300,7 @@ fn convert(x: *const dyn Sub) -&gt; *const dyn Sup {
 <p>The following options have been identified. The preferred solution is not yet clear.</p>
 <h3 id="rawunsafe-make-raw-pointer-upcasting-unsafe-not-possible-once-dyn-subtrait-unsizedyn-supertrait-is-stable"><a class="header" href="#rawunsafe-make-raw-pointer-upcasting-unsafe-not-possible-once-dyn-subtrait-unsizedyn-supertrait-is-stable">RawUnsafe: Make raw pointer upcasting unsafe (not possible once <code>dyn SubTrait: Unsize&lt;dyn SuperTrait&gt;</code> is stable)</a></h3>
 <p>We could permit &quot;safe pointer&quot; upcasting but make raw pointer upcasting unsafe. This would require changing the design of the coercion traits somewhat. We would introduce a new &quot;magic trait&quot; <code>RawUnsize</code>, analogous to <code>Unsize</code> except that it doesn't permit upcasting or any other operations that could require valid metadata. We would then modify the impl of <code>CoerceUnsized</code> for raw pointers to be:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>impl&lt;T, U&gt; CoerceUnsized&lt;*const U&gt; for *const T where
     T: Unsize&lt;U&gt; + ?Sized,
@@ -300,8 +308,7 @@ fn convert(x: *const dyn Sub) -&gt; *const dyn Sup {
 <span class="boring">}
 </span></code></pre></pre>
 <p>and it would become</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>impl&lt;T, U&gt; CoerceUnsized&lt;*const U&gt; for *const T where
     T: RawUnsize&lt;U&gt; + ?Sized,
@@ -309,8 +316,7 @@ fn convert(x: *const dyn Sub) -&gt; *const dyn Sup {
 <span class="boring">}
 </span></code></pre></pre>
 <p>To support upcasting on raw pointers, we can then introduce some other intrinsic for doing raw pointer upcast, such as something like this (modulo stacked borrows, which this <em>particular</em> definition may invalidate):</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>/// Unsafefy condition: If the metadata for `T` must be valid.
 pub unsafe fn unsize_raw_pointer&lt;T, U&gt;(t: *const T) -&gt; *const U
@@ -354,8 +360,7 @@ where
 <li>If the pointer is not initialized, and hence you don't know which vtable to use, you have the same options as described under VISufficientlyValid.</li>
 </ul>
 <p>The primary downsice of this proposal versus VISufficientlyValid is that the causes of UB are rather more subtle. Instead of UB occurring when the pointer is created, it occurs when an upcast occurs, and the locations for upcasts can be implicit (eg., any assignment or function call). Consider the following example:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn noop(x: *mut dyn SuperTrait) { 
     /* look ma, empty body */
@@ -380,8 +385,7 @@ fn creator() {
 <p>Adopting this option remains a possibility in the future, as it would be a backwards compatible extension to the above rule.</p>
 <h3 id="sistructvalid-extend-safety-condition-to-require-a-structurally-valid-vtable-still-possible-in-the-future"><a class="header" href="#sistructvalid-extend-safety-condition-to-require-a-structurally-valid-vtable-still-possible-in-the-future">SIStructValid: Extend safety condition to require a &quot;structurally valid&quot; vtable (still possible in the future)</a></h3>
 <p>Instead of requiring a valid vtable, we could require a &quot;structurally valid&quot; vtable. This vtable would have null pointers for all methods as well as a dummy type-id but would have the same &quot;structure&quot; as an ordinary vtable. There would be an intrinsic that gives access to the vtable:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn dummy_vtable::&lt;T: ?Sized&gt;() -&gt; T::Metadata
 <span class="boring">}
@@ -409,8 +413,7 @@ fn creator() {
 </ul>
 <h3 id="metadata-and-field-offsets"><a class="header" href="#metadata-and-field-offsets">Metadata and field offsets</a></h3>
 <p>Consider these struct definitions:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>struct RefCounted&lt;T&gt; {
     counter: usize,
@@ -424,16 +427,14 @@ struct Foo&lt;U&gt; {
 <span class="boring">}
 </span></code></pre></pre>
 <p>and now assume that I have a <code>*const RefCounted&lt;Foo&lt;u32&gt;&gt;</code> which is coerced:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let pointer1: *const RefCounted&lt;Foo&lt;u32&gt;&gt; = ...;
 let pointer2: *const RefCounted&lt;Foo&lt;dyn Debug&gt;&gt; = pointer1;
 <span class="boring">}
 </span></code></pre></pre>
 <p>If I now try to get the address of the field <code>field</code>...</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let pointer3: *const u32 = unsafe { raw_addr!((*pointer2).data.field) };
 <span class="boring">}
@@ -444,7 +445,7 @@ let pointer2: *const RefCounted&lt;Foo&lt;dyn Debug&gt;&gt; = pointer1;
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../design-discussions/definition.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../design-discussions/upcast-safety-3-options.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                             <a rel="next" href="../design-discussions/upcast-safety.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
@@ -456,7 +457,7 @@ let pointer2: *const RefCounted&lt;Foo&lt;dyn Debug&gt;&gt; = pointer1;
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../design-discussions/definition.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../design-discussions/upcast-safety-3-options.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                     <a rel="next" href="../design-discussions/upcast-safety.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
