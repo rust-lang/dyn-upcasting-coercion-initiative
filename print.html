@@ -250,6 +250,7 @@ Until the feature enters &quot;feature complete&quot; form, the explainer should
 <p>When the third rule is involved, this unsizing coercion is a dyn upcasting coercion.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="dyn-upcast-safety"><a class="header" href="#dyn-upcast-safety">Dyn upcast safety</a></h1>
 <p>This document proposes a resolution to the last outstanding question blocking <code>dyn</code> upcast.</p>
+<p>Tracking issue: https://github.com/rust-lang/rust/issues/101336</p>
 <h2 id="background"><a class="header" href="#background">Background</a></h2>
 <p>We are trying to enable &quot;upcasts&quot; from a <code>dyn Trait</code> to its supertraits:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
