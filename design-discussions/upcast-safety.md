@@ -1,5 +1,7 @@
 # Upcast safety
 
+**NB: This document is outdated.** [Click here to see the latest version.](./upcast-safety-3.md)
+
 ## Scenario
 
 * Casting `*dyn Foo` to `*dyn Bar` requires adjusting the vtable from a vtable for `Foo` to one for `Bar`

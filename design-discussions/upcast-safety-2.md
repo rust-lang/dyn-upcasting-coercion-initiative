@@ -1,5 +1,7 @@
 # Dyn upcast safety
 
+**NB: This document is outdated.** [Click here to see the latest version.](./upcast-safety-3.md)
+
 ## Summary
 
 This doc concerns possible resolutions for the following potential problem:
@@ -119,6 +121,18 @@ Of these three:
 * `from_raw_parts` requires a valid vtable for `T` as argument, so it would meet the safety requirement
 * `transmute` is unsafe, but it would indeed be a requirement that users of transmute must uphold
 * `null`, if extended to unsized types, would be tricky -- we would need to have some way to get a "dummy" vtable that is structurally sound enough to permit upcasting, but which has (for example) null pointers for the actual methods. This is, however, eminently doable.
+
+### Interaction: Raw pointer method calls
+
+It would be useful if unsafe code could declare `*const self` and `*mut self` methods in traits
+
+```rust
+pub trait FreeMe {
+    pub unsafe fn free_me(*const self);
+}
+```
+
+Given that using `&self` implies (for ex
 
 ## Core decision to be made
 
