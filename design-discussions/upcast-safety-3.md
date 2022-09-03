@@ -2,6 +2,8 @@
 
 This document proposes a resolution to the last outstanding question blocking `dyn` upcast.
 
+Tracking issue: https://github.com/rust-lang/rust/issues/101336
+
 ## Background
 
 We are trying to enable "upcasts" from a `dyn Trait` to its supertraits:
